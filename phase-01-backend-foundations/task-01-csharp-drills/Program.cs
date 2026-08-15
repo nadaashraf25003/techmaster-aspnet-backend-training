@@ -9,8 +9,7 @@ string? choice = Console.ReadLine();
 switch (choice)
 {
     case "1":
-        // Run Drill 01
-        Console.WriteLine("1. Temperature Converter");
+        Drill01_TemperatureConverter.Run();
         break;
 
     case "2":
