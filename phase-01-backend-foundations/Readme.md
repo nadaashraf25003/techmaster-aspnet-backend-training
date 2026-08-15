@@ -18,3 +18,27 @@ Validates login credentials with a maximum of three attempts before locking the 
 #### Drill 04: Even/Odd Analyzer
 
 Reads multiple validated integers and separates them into even and odd lists with their counts.
+
+#### Drill 05: Maximum and Minimum Finder
+
+Find maximum and minimum values from a list manually before using LINQ, with bonus LINQ comparison.
+
+#### Drill 06: Word Counter
+
+Count words in a sentence while ignoring extra spaces and empty input.
+
+#### Drill 07: Name Formatter
+
+Normalize a messy full name into professional title case.
+
+#### Drill 08: Password Strength Checker
+
+Validate password strength using common rules and report missing requirements.
+
+#### Drill 09: Shopping Cart Total
+
+Calculate a shopping cart total with discount rules (10% off if total exceeds 1000).
+
+#### Drill 10: Simple ATM Menu
+
+Create an ATM simulation with a menu that stays open until exit.
