@@ -1,6 +1,6 @@
 # Task 01 - C# Logic Drill Pack
 
-| Drill No. | Drill Name | Topic | Status | Notes | Expected Skill Evidence
+| Drill No. | Drill Name | Topic | Status | Notes | Expected Skill Evidence |
 |---|---|---|---|---|
 | 01 | Temperature Converter | Parsing / Calculation | Done | Handles invalid input | Parsing / Calculation / Formatting. |
 | 02 | Grade Calculator | Conditions | Done | Validates scores from 0 to 100 | Conditions / Boundaries |
@@ -12,6 +12,16 @@
 | 08 | Password Strength Checker | Validation / Boolean Flags | Done | Reports missing rules | Validation / Boolean Flags |
 | 09 | Shopping Cart Total | Loops / Decimal Business Rules | Done | 10% discount over 1000 | Loops / Decimal Business Rules |
 | 10 | Simple ATM Menu | Menu Loop / Switch / Validation | Done | Menu stays open until exit | Menu Loop / Switch / Validation |
+| 11 | Duplicate Number Detector | HashSet / Duplicates | Done | Detects and prints duplicates once | HashSet / Duplicates |
+| 12 | Email Validator | String Validation | Done | Validates email format | String Validation |
+| 13 | Palindrome Checker | String Reverse / Comparison | Done | Checks palindrome with/without spaces | String Reverse / Comparison |
+| 14 | Simple Expense Tracker | Lists / Objects / Calculations | Done | Tracks expenses with statistics | Lists / Objects / Calculations |
+| 15 | Array Rotation | Arrays / Indexing | Done | Rotates array right by one position | Arrays / Indexing |
+| 16 | Frequency Counter | Dictionary / Counting | Done | Counts element frequencies | Dictionary / Counting |
+| 17 | Simple Search Engine | String Search / Lists | Done | Searches words in string list | String Search / Lists |
+| 18 | Number Statistics | Statistics / Calculations | Done | Calculates min/max/sum/average | Statistics / Calculations |
+| 19 | Simple Ticket Price Calculator | Conditions / Calculations | Done | Calculates price by age category | Conditions / Calculations |
+| 20 | Method Refactoring Challenge | Refactoring / Design | Done | Splits complex method into smaller ones | Refactoring / Design |
 
 ## Drill 01: Temperature Converter
 
@@ -151,3 +161,119 @@ Examples:
 - Deposit `500` → Balance: `1500`
 - Withdraw `2000` → Output: `Insufficient balance`
 - Option `9` → Output: `Invalid option`
+
+## Drill 11: Duplicate Number Detector
+
+Detect duplicate numbers in a list and print each duplicate once.
+
+- Accept a list of integers.
+- Detect duplicated values.
+- Print duplicate values once.
+- Print clear message if no duplicates.
+
+Examples:
+- Input: `1,2,3,2,4,1` → Output: `Duplicates: 2, 1`
+- Input: `1,2,3` → Output: `No duplicates found`
+
+## Drill 12: Email Validator
+
+Create a simple email validator for training purposes.
+
+- Email cannot be empty.
+- Must contain @.
+- Must contain dot.
+- Cannot start or end with @.
+- Cannot contain spaces.
+
+Examples:
+- Input: `test@mail.com` → Output: `Valid email`
+- Input: `@mail.com` → Output: `Invalid`
+- Input: `test mail.com` → Output: `Invalid`
+- Input: `test@mail` → Output: `Invalid`
+
+## Drill 13: Palindrome Checker
+
+Check whether a word or sentence reads the same forward and backward.
+
+- Ask for text.
+- Ignore case.
+- Reverse the cleaned text.
+- Compare original cleaned text with reversed text.
+- Bonus: ignore spaces.
+
+Examples:
+- Input: `madam` → Output: `Palindrome`
+- Input: `hello` → Output: `Not Palindrome`
+- Input: `nurses run` → Output: `Palindrome`
+
+## Drill 14: Simple Expense Tracker
+
+Track named expenses and calculate summary statistics.
+
+- Allow user to enter multiple expenses.
+- Each expense has name and amount.
+- Amount must be positive.
+- Print total, average and highest expense.
+
+Examples:
+- Input: `Food 100, Transport 50` → Output: `Total: 150, Average: 75, Highest: Food`
+- Input: `-50` → Output: `Invalid amount`
+
+## Drill 15: Array Rotation
+
+Rotate array elements one step to the right.
+
+- Use an array.
+- Move last element to first position.
+- Shift all other elements right.
+- Do not use built-in tricks only.
+
+Examples:
+- Input: `[1,2,3,4,5]` → Output: `[5,1,2,3,4]`
+- Input: `[7]` → Output: `[7]`
+- Input: `[1,1,2]` → Output: `[2,1,1]`
+
+## Drill 16: Frequency Counter
+
+Count the frequency of each element in a collection.
+
+- Accept a list of items.
+- Count occurrences of each element.
+- Display frequency for each unique element.
+- Handle different data types if needed.
+
+## Drill 17: Simple Search Engine
+
+Search for a word in a list of strings and return matching results.
+
+- Create a list of strings.
+- Ask for search term.
+- Find all matching entries.
+- Display results clearly.
+
+## Drill 18: Number Statistics
+
+Calculate statistics from a list of numbers.
+
+- Accept a list of numbers.
+- Calculate minimum, maximum, sum, and average.
+- Display all statistics clearly.
+- Handle empty list gracefully.
+
+## Drill 19: Simple Ticket Price Calculator
+
+Calculate ticket prices based on age categories.
+
+- Ask for age.
+- Apply different pricing rules (e.g., child, adult, senior).
+- Validate age input.
+- Display final price.
+
+## Drill 20: Method Refactoring Challenge
+
+Refactor a complex method into smaller, reusable methods.
+
+- Given a complex method with multiple responsibilities.
+- Identify separate concerns.
+- Extract methods for each concern.
+- Improve code readability and maintainability.
