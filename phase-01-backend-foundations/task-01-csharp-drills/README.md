@@ -1,8 +1,10 @@
 # Task 01 - C# Logic Drill Pack
 
+## Drill Overview
+
 | Drill No. | Drill Name | Topic | Status | Notes | Expected Skill Evidence |
-|---|---|---|---|---|
-| 01 | Temperature Converter | Parsing / Calculation | Done | Handles invalid input | Parsing / Calculation / Formatting. |
+|---:|---|---|---|---|---|
+| 01 | Temperature Converter | Parsing / Calculation | Done | Handles invalid input | Parsing / Calculation / Formatting |
 | 02 | Grade Calculator | Conditions | Done | Validates scores from 0 to 100 | Conditions / Boundaries |
 | 03 | Login Validator | Loops / Strings | Done | Max 3 attempts | Loops / String Comparison |
 | 04 | Even/Odd Analyzer | Conditions / Modulo | Done | Handles invalid input | Loops / Lists / Modulo |
@@ -22,6 +24,7 @@
 | 18 | Number Statistics | Statistics / Calculations | Done | Calculates min/max/sum/average | Statistics / Calculations |
 | 19 | Simple Ticket Price Calculator | Conditions / Calculations | Done | Calculates price by age category | Conditions / Calculations |
 | 20 | Method Refactoring Challenge | Refactoring / Design | Done | Splits complex method into smaller ones | Refactoring / Design |
+
 
 ## Drill 01: Temperature Converter
 
@@ -232,48 +235,3 @@ Examples:
 - Input: `[1,2,3,4,5]` → Output: `[5,1,2,3,4]`
 - Input: `[7]` → Output: `[7]`
 - Input: `[1,1,2]` → Output: `[2,1,1]`
-
-## Drill 16: Frequency Counter
-
-Count the frequency of each element in a collection.
-
-- Accept a list of items.
-- Count occurrences of each element.
-- Display frequency for each unique element.
-- Handle different data types if needed.
-
-## Drill 17: Simple Search Engine
-
-Search for a word in a list of strings and return matching results.
-
-- Create a list of strings.
-- Ask for search term.
-- Find all matching entries.
-- Display results clearly.
-
-## Drill 18: Number Statistics
-
-Calculate statistics from a list of numbers.
-
-- Accept a list of numbers.
-- Calculate minimum, maximum, sum, and average.
-- Display all statistics clearly.
-- Handle empty list gracefully.
-
-## Drill 19: Simple Ticket Price Calculator
-
-Calculate ticket prices based on age categories.
-
-- Ask for age.
-- Apply different pricing rules (e.g., child, adult, senior).
-- Validate age input.
-- Display final price.
-
-## Drill 20: Method Refactoring Challenge
-
-Refactor a complex method into smaller, reusable methods.
-
-- Given a complex method with multiple responsibilities.
-- Identify separate concerns.
-- Extract methods for each concern.
-- Improve code readability and maintainability.
