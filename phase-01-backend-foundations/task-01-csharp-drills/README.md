@@ -235,3 +235,72 @@ Examples:
 - Input: `[1,2,3,4,5]` → Output: `[5,1,2,3,4]`
 - Input: `[7]` → Output: `[7]`
 - Input: `[1,1,2]` → Output: `[2,1,1]`
+
+## Drill 16: Frequency Counter
+
+Count how many times each number appears in a list.
+
+- Use a list of integers.
+- Use Dictionary<int, int> to count frequencies.
+- Increment count for each occurrence.
+- Print each number with its frequency.
+
+Examples:
+- Input: `1,2,1,3,2,1` → Output: `1 => 3, 2 => 2, 3 => 1`
+- Input: `5,5,5` → Output: `5 => 3`
+
+## Drill 17: Simple Search Engine
+
+Search names by partial keyword like a simple backend search filter.
+
+- Create a list of names.
+- Ask user for a search keyword.
+- Return names containing the keyword.
+- Search must be case-insensitive.
+- Print "No results found" if empty.
+
+Examples:
+- Input: `Ali` → Output: `Ali Hassan, Khaled Ali`
+- Input: `zz` → Output: `No results found`
+
+## Drill 18: Number Statistics
+
+Analyze a list of numbers and print useful statistics.
+
+- Print count, sum, average, max, min.
+- Count positive numbers.
+- Count negative numbers.
+- Handle zero separately if desired.
+
+Examples:
+- Input: `1,-2,3,0` → Output: `Count 4, Sum 2, Positives 2, Negatives 1`
+- Input: `5` → Output: `Average 5`
+
+## Drill 19: Simple Ticket Price Calculator
+
+Calculate ticket price while applying only the best eligible discount.
+
+- Base price = 100.
+- Age below 12 gets 50% discount.
+- Age above 60 gets 30% discount.
+- Student gets 20% discount.
+- Apply best valid discount only.
+
+Examples:
+- Input: age 10, student yes → Output: `50`
+- Input: age 70, student yes → Output: `70`
+- Input: age 20, student yes → Output: `80`
+- Input: age 30, student no → Output: `100`
+
+## Drill 20: Method Refactoring Challenge
+
+Refactor 3 previous drills into smaller methods instead of writing all logic in Main.
+
+- Choose any 3 previous drills.
+- Split each into input, validation, processing, and output methods.
+- Give methods clear names.
+- Keep Main small and readable.
+
+Expected methods:
+- Grade drill: ReadScore, ValidateScore, CalculateGrade, PrintGrade
+- ATM drill: ShowMenu, Deposit, Withdraw, PrintBalance

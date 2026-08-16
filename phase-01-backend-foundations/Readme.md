@@ -62,3 +62,23 @@ Track named expenses and calculate summary statistics (total, average, highest).
 #### Drill 15: Array Rotation
 
 Rotate array elements one step to the right using manual indexing.
+
+#### Drill 16: Frequency Counter
+
+Count element frequencies using Dictionary<int, int>.
+
+#### Drill 17: Simple Search Engine
+
+Search names by partial keyword with case-insensitive matching.
+
+#### Drill 18: Number Statistics
+
+Print count, sum, average, max, min, positives, and negatives.
+
+#### Drill 19: Simple Ticket Price Calculator
+
+Calculate ticket price with the best eligible age/student discount.
+
+#### Drill 20: Method Refactoring Challenge
+
+Refactor 3 drills into small single-responsibility methods.

@@ -25,86 +25,287 @@ Console.Write("Choose a drill: ");
 
 string? choice = Console.ReadLine();
 
+
 switch (choice)
 {
     case "1":
-        Drill01_TemperatureConverter.Run();
+        {
+            Drill01_TemperatureConverter.Run();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill01_TemperatureConverter.Run();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }     
         break;
 
     case "2":
-        Drill_02_GradeCalculator.GradeCalculator();
+        {
+            Drill_02_GradeCalculator.GradeCalculator();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_02_GradeCalculator.GradeCalculator();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "3":
-        Drill_03_SimpleLoginValidator.ValidateLogin();
-        break;
-
+        {
+            Drill_03_SimpleLoginValidator.ValidateLogin();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_03_SimpleLoginValidator.ValidateLogin();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
+        break;     
+       
     case "4":
-        Drill_04_EvenOddAnalyzer.AnalyzeEvenOdd();
+        {
+            Drill_04_EvenOddAnalyzer.AnalyzeEvenOdd();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_04_EvenOddAnalyzer.AnalyzeEvenOdd();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "5":
-        Drill_05_MaxMinFinder.FindMaxMin();
+        {
+            Drill_05_MaxMinFinder.FindMaxMin();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_05_MaxMinFinder.FindMaxMin();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "6":
-        Drill_06_WordCounter.WordCounter();
+        {
+            Drill_06_WordCounter.WordCounter();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_06_WordCounter.WordCounter();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "7":
-        Drill_07_NameFormatter.FormatName();
+        {
+            Drill_07_NameFormatter.FormatName();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_07_NameFormatter.FormatName();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "8":
-        Drill_08_PasswordStrengthChecker.CheckPasswordStrength();
+        {
+            Drill_08_PasswordStrengthChecker.CheckPasswordStrength();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_08_PasswordStrengthChecker.CheckPasswordStrength();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "9":
-        Drill_09_ShoppingCartTotal.CalculateShoppingCartTotal();
+        {
+            Drill_09_ShoppingCartTotal.CalculateShoppingCartTotal();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_09_ShoppingCartTotal.CalculateShoppingCartTotal();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "10":
-        Drill_10_SimpleAtmMenu.ShowAtmMenu();
+        {
+            Drill_10_SimpleAtmMenu.ShowAtmMenu();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_10_SimpleAtmMenu.ShowAtmMenu();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "11":
-        Drill_11_DuplicateNumDetector.HasDuplicate();
+        {
+            Drill_11_DuplicateNumDetector.HasDuplicate();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_11_DuplicateNumDetector.HasDuplicate();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "12":
-        Drill_12_EmailValidator.ValidateEmail();
+        {
+            Drill_12_EmailValidator.ValidateEmail();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_12_EmailValidator.ValidateEmail();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "13":
-        Drill_13_PalindromeChecker.CheckPalindrome();
+        {
+            Drill_13_PalindromeChecker.CheckPalindrome();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_13_PalindromeChecker.CheckPalindrome();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "14":
-        Drill_14_SimpleExpenseTracker.TrackExpenses();
+        {
+            Drill_14_SimpleExpenseTracker.TrackExpenses();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_14_SimpleExpenseTracker.TrackExpenses();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "15":
-        Drill_15_ArrayRotation.RotateArray();
+        {
+            Drill_15_ArrayRotation.RotateArray();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_15_ArrayRotation.RotateArray();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "16":
-        Drill_16_FrequencyCounter.CountFrequency();
+        {
+            Drill_16_FrequencyCounter.CountFrequency();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_16_FrequencyCounter.CountFrequency();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "17":
-        Drill_17_SimpleSearchEngine.Search();
+        {
+            Drill_17_SimpleSearchEngine.Search();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_17_SimpleSearchEngine.Search();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "18":
-        Drill_18_NumberStatistics.CalculateStatistics();
+        {
+            Drill_18_NumberStatistics.CalculateStatistics();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_18_NumberStatistics.CalculateStatistics();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "19":
-        Drill_19_SimpleTicketPriceCalculator.CalculateTicketPrice();
+        {
+            Drill_19_SimpleTicketPriceCalculator.CalculateTicketPrice();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_19_SimpleTicketPriceCalculator.CalculateTicketPrice();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     case "20":
-        Drill_20_MethodRefactoringChallenge.RefactorMethods();
+        {
+            Drill_20_MethodRefactoringChallenge.RefactorMethods();
+            Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+            string? continueChoice = Console.ReadLine();
+            while (continueChoice != null && continueChoice.Trim().ToLower() == "yes")
+            {
+                Drill_20_MethodRefactoringChallenge.RefactorMethods();
+                Console.WriteLine("Did you want to continue with the This drill? (yes/no)");
+                continueChoice = Console.ReadLine();
+            }
+        }
         break;
 
     default:
