@@ -1,4 +1,4 @@
-# TectMaster 
+# TechMaster 
 ## phase-01-backend-foundations
 
 ### Task 01: C# Drills
@@ -82,3 +82,44 @@ Calculate ticket price with the best eligible age/student discount.
 #### Drill 20: Method Refactoring Challenge
 
 Refactor 3 drills into small single-responsibility methods.
+
+---
+
+### Task 02: Bank Account System
+
+A console-based bank account management system built with C# (.NET), demonstrating core OOP principles, layered architecture, and business logic encapsulation.
+
+#### Key Features:
+- **Create Customer Account**: Register a new customer and open a bank account with an initial balance.
+- **Deposit Money**: Deposit a positive amount into an existing account with automated transaction logging.
+- **Withdraw Money**: Withdraw funds with overdraft protection and balance validation.
+- **Transfer Money**: Securely transfer funds between two accounts with dual-transaction auditing.
+- **View Account Details**: Display full account and customer information using DTO patterns.
+- **View Transaction History**: View complete transaction audit trail sorted by date (newest first).
+- **View All Accounts**: Display a summary view of all registered accounts.
+
+#### Core Concepts:
+- **3-Layer Architecture**: Separation of concerns across `UI` (`ConsoleMenu.cs`), `Services` (`BankService.cs`), and `Models` (`BankAccount.cs`, `Customer.cs`, `Transaction.cs`).
+- **Encapsulation & Immutability**: Protected balances mutated only through domain methods, with immutable transaction audit logs.
+- **Validation & Exception Handling**: Defensive checks across all banking operations with clean UI-level error handling.
+
+---
+
+### Task 03: Employee Management System
+
+A console-based employee management and analytics system built with C# (.NET) adhering to 3-layer architecture, data encapsulation, and comprehensive LINQ querying.
+
+#### Key Features:
+- **Add Employee**: Register new employees with unique IDs (e.g., `EMP-1001`), salary validation, and non-future hire date checks.
+- **Update Employee**: Selectively update email, department, position, and salary with validation while retaining existing values on empty input.
+- **Deactivate Employee**: Soft-delete records (`IsActive = false`) to preserve historical integrity.
+- **Search Employees**: Case-insensitive partial name search and exact/partial Employee ID search.
+- **Filter by Department**: Filter records by department and active status.
+- **Sort Employees**: Sort employee lists by salary (asc/desc), hire date (asc/desc), or full name (alphabetical).
+- **Salary & Payroll Reports**: Detailed payroll analytics including average salary, highest/lowest earners, total payroll, and department headcount metrics using LINQ.
+- **View All Employees**: Formatted tabular view displaying all registered employees.
+
+#### Core Concepts:
+- **Layered Design**: Modular design across `UI` (`ConsoleMenu.cs`), `Services` (`EmployeeService.cs`, `EmployeeReportService.cs`), and `Models` (`Employee.cs`).
+- **Domain Invariant Validation**: The `Employee` class encapsulates state changes with internal validation methods.
+- **LINQ Operations**: Extensive use of LINQ for sorting, filtering, and statistical aggregations.

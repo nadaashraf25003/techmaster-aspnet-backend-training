@@ -1,10 +1,10 @@
-# 👥 Task 03 - Employee Management System
+# Task 03 - Employee Management System
 
 A console-based Employee Management System built with C# (.NET 10.0) following clean architecture design patterns, encapsulating state, and providing robust input validation.
 
 ---
 
-## 🚀 Features
+## Features
 
 The system fully supports the following features as required:
 
@@ -31,7 +31,7 @@ The system fully supports the following features as required:
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 task-03-employee-management/
@@ -54,7 +54,7 @@ task-03-employee-management/
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 Following the 3-Layer separation pattern:
 ```
@@ -68,20 +68,3 @@ Following the 3-Layer separation pattern:
 - **Model Layer**: The `Employee` class encapsulates state. Setting values requires using validation-backed methods (`UpdateEmail`, `UpdateSalary`, etc.) to prevent corrupt state.
 - **Service Layer**: Orchestrates database simulation using lists, validates constraints across multiple employees (e.g., uniqueness of Employee IDs), and calculates analytics.
 - **UI Layer**: Manages menu loops, prompts the user field-by-field, performs initial format parsing, catches errors, and prints results in tables.
-
----
-
-## 💻 How to Run
-
-1. Open a PowerShell/Terminal window in the project directory:
-   ```bash
-   cd phase-01-backend-foundations/task-03-employee-management
-   ```
-2. Build the project to verify dependencies:
-   ```bash
-   dotnet build
-   ```
-3. Run the application:
-   ```bash
-   dotnet run
-   ```
