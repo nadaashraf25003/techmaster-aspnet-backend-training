@@ -8,4 +8,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="original-bad-code\**" />
+    <None Include="original-bad-code\**" />
+  </ItemGroup>
+
 </Project>

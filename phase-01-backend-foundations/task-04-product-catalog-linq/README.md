@@ -200,17 +200,3 @@ public PagedResult<Product> GetPagedProducts(int pageNumber, int pageSize)
 }
 ```
 - **Why it matters**: Foundation for scalable REST APIs, avoiding loading entire datasets into client memory.
-
----
-
-## How to Run
-
-### Interactive Console Mode:
-```bash
-dotnet run --project phase-01-backend-foundations/task-04-product-catalog-linq/task-04-product-catalog-linq.csproj
-```
-
-### Automated Queries Showcase Mode (`--demo`):
-```bash
-dotnet run --project phase-01-backend-foundations/task-04-product-catalog-linq/task-04-product-catalog-linq.csproj -- --demo
-```
