@@ -123,3 +123,27 @@ A console-based employee management and analytics system built with C# (.NET) ad
 - **Layered Design**: Modular design across `UI` (`ConsoleMenu.cs`), `Services` (`EmployeeService.cs`, `EmployeeReportService.cs`), and `Models` (`Employee.cs`).
 - **Domain Invariant Validation**: The `Employee` class encapsulates state changes with internal validation methods.
 - **LINQ Operations**: Extensive use of LINQ for sorting, filtering, and statistical aggregations.
+
+---
+
+### Task 04: Product Catalog LINQ System
+
+A high-performance console-based Product Catalog Query and Reporting System built with C# (.NET 10.0) demonstrating 20 comprehensive LINQ query operations, clean layered architecture, and reporting projections.
+
+#### Key Features:
+- **Available Products Filtering**: Query active in-stock inventory (`Where(p => p.IsInStock)`).
+- **Category & Price Range Filtering**: Case-insensitive category and numeric boundary filtering.
+- **Partial Keyword Search**: Case-insensitive substring matching on product titles.
+- **Ascending / Descending Sorting**: Dynamic price sorting (`OrderBy` / `OrderByDescending`).
+- **Category Grouping & Aggregations**: Group by category and compute counts, min, max, average prices, and stock values (`GroupBy` + `Select`).
+- **Low Stock Alerts**: Configurable stock threshold alerts (e.g., items with $\le 5$ units).
+- **Supplier Analytics**: Group products by supplier and project `SupplierReport` DTO with total stock valuation.
+- **Pagination Engine**: Fast, bounded page navigation (`Skip` + `Take`) with previous/next page indicators.
+- **Recent Product Filtering**: Time-window filtering for products created in the last 60 days.
+- **Above-Average Pricing Analysis**: Multi-step query finding products priced above catalog average.
+
+#### Core Concepts:
+- **Clean 3-Layer Architecture**: Separation of concerns across `UI` (`ConsoleMenu.cs`, `ConsoleFormatter.cs`), `Services` (`ProductQueryService.cs`), and `Models` (`Product.cs`, `SupplierReport.cs`, `CategoryStats.cs`, `PagedResult.cs`).
+- **Strongly Typed DTO Projections**: Transforming raw entity groupings into dedicated reporting models.
+- **Comprehensive LINQ Showcase**: `Where`, `Select`, `OrderBy`, `OrderByDescending`, `GroupBy`, `Average`, `Sum`, `Min`, `Max`, `Skip`, `Take`, `Any`, and `Distinct`.
+
