@@ -23,7 +23,7 @@
 ## Tasks Checklist
 - [x] **Task 00 - API Workspace Setup** (`task-00-api-setup`)
 - [x] **Task 01 - REST & Routing Drill Pack** (`task-01-rest-routing-drills`)
-- [ ] **Task 02 - Student Management API** (`task-02-student-management-api`)
+- [x] **Task 02 - Student Management API** (`task-02-student-management-api`)
 - [ ] **Task 03 - Products & Categories API** (`task-03-products-categories-api`)
 - [ ] **Task 04 - Book Store API Mini-Project** (`task-04-book-store-api`)
 - [ ] **Task 05 - Swagger & Postman Evidence Pack** (`task-05-postman-swagger-evidence`)

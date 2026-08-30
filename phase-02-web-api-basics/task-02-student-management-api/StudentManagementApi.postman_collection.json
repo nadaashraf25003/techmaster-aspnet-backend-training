@@ -1,0 +1,339 @@
+{
+  "info": {
+    "_postman_id": "a9b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "TechMaster Academy - Student Management API",
+    "description": "Postman Collection for Phase 02 Task 02: Student Management API covering all 6 core features, edge cases, validation, pagination, status toggling, and stats.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5050",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Feature 01 - Create Student",
+      "item": [
+        {
+          "name": "Create Student - Valid (201 Created)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Hassan Mansour\",\n  \"email\": \"hassan.mansour@techmaster.com\",\n  \"phoneNumber\": \"+201091234567\",\n  \"trackName\": \"ASP.NET Backend\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"]
+            }
+          }
+        },
+        {
+          "name": "Create Student - Duplicate Email (400 Bad Request)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Ahmed Hassan Duplicate\",\n  \"email\": \"ahmed.hassan@techmaster.com\",\n  \"phoneNumber\": \"+201011223344\",\n  \"trackName\": \"ASP.NET Backend\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"]
+            }
+          }
+        },
+        {
+          "name": "Create Student - Missing Required Fields (400 Bad Request)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"\",\n  \"email\": \"not-an-email\",\n  \"phoneNumber\": \"\",\n  \"trackName\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Feature 02 - Get All Students",
+      "item": [
+        {
+          "name": "Get All Students - Default Pagination",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"]
+            }
+          }
+        },
+        {
+          "name": "Get All Students - Search by Name or Email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students?search=sara",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "sara"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Students - Filter by Track",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students?trackName=ASP.NET Backend",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"],
+              "query": [
+                {
+                  "key": "trackName",
+                  "value": "ASP.NET Backend"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Students - Filter by IsActive",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students?isActive=false",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"],
+              "query": [
+                {
+                  "key": "isActive",
+                  "value": "false"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Students - Custom Page & PageSize",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students?pageNumber=1&pageSize=3",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"],
+              "query": [
+                {
+                  "key": "pageNumber",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "3"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Feature 03 - Get Student By Id",
+      "item": [
+        {
+          "name": "Get Student By Id - Existing (200 OK)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Student By Id - Missing (404 Not Found)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students/999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students", "999"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Feature 04 - Update Student",
+      "item": [
+        {
+          "name": "Update Student - Valid (200 OK)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Ahmed Hassan Jr.\",\n  \"email\": \"ahmed.hassan@techmaster.com\",\n  \"phoneNumber\": \"+201011119999\",\n  \"trackName\": \"ASP.NET Backend\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Student - Missing Id (404 Not Found)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Non-existent\",\n  \"email\": \"nonexistent@techmaster.com\",\n  \"phoneNumber\": \"+201000000000\",\n  \"trackName\": \"ASP.NET Backend\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students/999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students", "999"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Feature 05 - Update Student Status",
+      "item": [
+        {
+          "name": "Deactivate Student (200 OK)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isActive\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students/1/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students", "1", "status"]
+            }
+          }
+        },
+        {
+          "name": "Activate Student (200 OK)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students/1/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students", "1", "status"]
+            }
+          }
+        },
+        {
+          "name": "Update Status - Missing Id (404 Not Found)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isActive\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students/999/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students", "999", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Feature 06 - Student Stats",
+      "item": [
+        {
+          "name": "Get Student Statistics (200 OK)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students", "stats"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
