@@ -6,7 +6,7 @@ This phase focuses on C# programming language mastery, Object-Oriented programmi
 
 ---
 
-##  Tech Stack & Badges
+## Tech Stack & Badges
 ![C#](https://img.shields.io/badge/Language-C%23-blue.svg)
 ![.NET 10.0](https://img.shields.io/badge/Platform-.NET%2010.0-purple.svg)
 ![SQL Server](https://img.shields.io/badge/Database-SQL%20Server-red.svg)
@@ -15,7 +15,7 @@ This phase focuses on C# programming language mastery, Object-Oriented programmi
 
 ---
 
-##  Phase Tasks Overview
+## Phase Tasks Overview
 
 ### [Task 00: Environment Setup](file:///c:/Users/user/Desktop/Tech_Master/techmaster-aspnet-backend-training/phase-01-backend-foundations/task-00-setup/)
 - **Description**: Initial configuration and development tool chain installation.
@@ -76,7 +76,7 @@ This phase focuses on C# programming language mastery, Object-Oriented programmi
 
 ---
 
-##  Core Architectural Patterns
+## Core Architectural Patterns
 
 Across all interactive programs developed in this phase, a consistent **3-Layer Separation of Concerns** was maintained:
 

@@ -1,11 +1,11 @@
 # Task 02 - Student Management API
 
-## 📋 Overview
+## Overview
 The **Student Management API** is a RESTful ASP.NET Core Web API built for **TechMaster Academy** administrators, mentors, and management to manage student profiles, tracks, statuses, and performance statistics throughout the career training program.
 
 ---
 
-## 🏛️ Architecture & Clean Code Principles
+## Architecture & Clean Code Principles
 This project strictly follows the **Separation of Concerns** principle:
 - **Controllers Layer (`Controllers/`)**: Handles HTTP requests, model state validation, HTTP status codes (`201 Created`, `200 OK`, `400 Bad Request`, `404 Not Found`), and produces standard response formats.
 - **Service Layer (`Services/`)**: Encapsulates business logic, email uniqueness checks, thread-safe in-memory storage, pagination calculations, and statistical aggregations.
@@ -14,7 +14,7 @@ This project strictly follows the **Separation of Concerns** principle:
 
 ---
 
-## 🚀 Features Summary
+## Features Summary
 
 | Feature # | Feature Name | HTTP Method | Endpoint Route | Description & Business Rules |
 |---|---|---|---|---|
@@ -27,7 +27,7 @@ This project strictly follows the **Separation of Concerns** principle:
 
 ---
 
-## 📖 API Endpoints & Request/Response Samples
+## API Endpoints & Request/Response Samples
 
 ### 1. Create Student (`POST /api/students`)
 **Request Body**:
@@ -200,7 +200,7 @@ This project strictly follows the **Separation of Concerns** principle:
 
 ---
 
-## 🛠️ How to Run & Test
+## How to Run & Test
 
 ### Run locally with .NET CLI
 ```bash

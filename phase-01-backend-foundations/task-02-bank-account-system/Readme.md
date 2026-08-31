@@ -1,4 +1,4 @@
-﻿# 🏦 Task 02 - Bank Account System
+# Task 02 - Bank Account System
 
 A console-based bank account management system built with C# (.NET), demonstrating core OOP principles, layered architecture, and business logic encapsulation.
 
@@ -19,7 +19,7 @@ A console-based bank account management system built with C# (.NET), demonstrati
 
 ---
 
-##  Project Structure
+## Project Structure
 
 ```
 task-02-bank-account-system/
@@ -44,7 +44,7 @@ task-02-bank-account-system/
 
 ---
 
-##  Architecture
+## Architecture
 
 The system follows a **3-Layer Architecture** to separate concerns:
 
@@ -62,7 +62,7 @@ The system follows a **3-Layer Architecture** to separate concerns:
 
 ---
 
-##  Key Classes
+## Key Classes
 
 ### `Customer`
 Stores customer personal data. All properties are `private set` — immutable after creation.
@@ -118,7 +118,7 @@ Key methods:
 
 ---
 
-##  Validation Rules
+## Validation Rules
 
 ### Create Account
 - Full name, email, and phone are **required**
@@ -141,7 +141,7 @@ Key methods:
 
 ---
 
-##  Invalid Cases Covered
+## Invalid Cases Covered
 
 | Operation | Invalid Case | Error Thrown |
 |-----------|-------------|--------------|
@@ -158,7 +158,7 @@ Key methods:
 
 ---
 
-##  Console Menu
+## Console Menu
 
 ```
 ====== TechMaster Bank System ======
@@ -175,7 +175,7 @@ Choose an option:
 
 ---
 
-##  Manual Testing Scenarios
+## Manual Testing Scenarios
 
 ### Scenario 1 — Happy Path
 1. Create a customer account with $1000 initial balance → note the account number
@@ -192,7 +192,7 @@ Choose an option:
 
 ---
 
-##  OOP Concepts Demonstrated
+## OOP Concepts Demonstrated
 
 | Concept | Where Applied |
 |---------|--------------|

@@ -1,11 +1,11 @@
 # Task 03 - Products & Categories API
 
-## 📋 Overview
+## Overview
 The **Products & Categories API** is a multi-resource ASP.NET Core Web API designed for store inventory management. It models related resources (**Categories** and **Products**), enforces cross-resource business validation, provides granular multi-criteria filtering, and generates advanced stock valuation reports using LINQ aggregations.
 
 ---
 
-## 🏛️ Domain Models & Business Rules
+## Domain Models & Business Rules
 
 ### 1. Category Model
 - `CategoryId` (int, auto-generated unique identifier)
@@ -25,7 +25,7 @@ The **Products & Categories API** is a multi-resource ASP.NET Core Web API desig
 - `CreatedAt` (DateTime, UTC timestamp)
 - `UpdatedAt` (DateTime?, UTC timestamp on update)
 
-### 🛡️ Critical Business Rules
+### Critical Business Rules
 1. **Cross-Resource Category Validation**: Before creating or updating any product, the API verifies that `CategoryId` exists. If invalid, the request is rejected with `400 Bad Request`.
 2. **Category Name Uniqueness**: Category names must be unique across the catalog (case-insensitive).
 3. **Protected Category Deletion**: Attempting to delete a category that currently has active products will return `400 Bad Request`, preventing orphan product records.
@@ -34,7 +34,7 @@ The **Products & Categories API** is a multi-resource ASP.NET Core Web API desig
 
 ---
 
-## 🚀 Seed Data Summary
+## Seed Data Summary
 The in-memory database is pre-seeded with **4 categories** and **16 products** across various stock categories (healthy, low stock <= 5, and out of stock = 0):
 
 | Category ID | Category Name | Seed Products Count | Sample Products |
@@ -46,7 +46,7 @@ The in-memory database is pre-seeded with **4 categories** and **16 products** a
 
 ---
 
-## 📖 API Endpoints & Routes
+## API Endpoints & Routes
 
 ### Categories Endpoints
 | HTTP Method | Route | Description | Status Codes |
@@ -71,7 +71,7 @@ The in-memory database is pre-seeded with **4 categories** and **16 products** a
 
 ---
 
-## 💡 Request & Response Samples
+## Request & Response Samples
 
 ### 1. Create Product with Category Validation (`POST /api/products`)
 **Request Body**:
@@ -197,7 +197,7 @@ The in-memory database is pre-seeded with **4 categories** and **16 products** a
 
 ---
 
-## 🛠️ How to Run & Test
+## How to Run & Test
 
 ### Run with .NET CLI
 ```bash

@@ -1,0 +1,30 @@
+using BookStoreApi.Services;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Register application services for Dependency Injection (Singletons for in-memory store persistence)
+builder.Services.AddSingleton<IAuthorService, AuthorService>();
+builder.Services.AddSingleton<ICategoryService, CategoryService>();
+builder.Services.AddSingleton<IBookService, BookService>();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
