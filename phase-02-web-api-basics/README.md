@@ -25,9 +25,9 @@
 - [x] **Task 01 - REST & Routing Drill Pack** (`task-01-rest-routing-drills`)
 - [x] **Task 02 - Student Management API** (`task-02-student-management-api`)
 - [x] **Task 03 - Products & Categories API** (`task-03-products-categories-api`)
-- [ ] **Task 04 - Book Store API Mini-Project** (`task-04-book-store-api`)
-- [ ] **Task 05 - Swagger & Postman Evidence Pack** (`task-05-postman-swagger-evidence`)
-- [ ] **Task 06 - API Standards & Refactor Pack** (`task-06-api-standards-refactor-pack`)
+- [x] **Task 04 - Book Store API Mini-Project** (`task-04-book-store-api`)
+- [x] **Task 05 - Swagger & Postman Evidence Pack** (`task-05-postman-swagger-evidence`)
+- [x] **Task 06 - API Standards & Refactor Pack** (`task-06-api-standards-refactor-pack`)
 - [ ] **Task 07 - Interview Answers & API Explanation Pack** (`task-07-interview-answers`)
 
 ## Evidence
