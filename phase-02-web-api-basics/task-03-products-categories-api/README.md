@@ -205,8 +205,8 @@ cd phase-02-web-api-basics/task-03-products-categories-api/ProductsCategoriesApi
 dotnet run
 ```
 Access Swagger UI at:
-- `http://localhost:5060/swagger`
-- `https://localhost:7060/swagger`
+- `http://localhost:5050/swagger`
+- `https://localhost:7050/swagger`
 
 ### Test via Postman
 1. Open Postman and import `ProductsCategoriesApi.postman_collection.json`.
