@@ -2,6 +2,9 @@ using EFCoreModelingDrills.Data;
 using EFCoreModelingDrills.Drill01_DbContextFirstMigration;
 using EFCoreModelingDrills.Drill02_OneToOneStudentProfile;
 using EFCoreModelingDrills.Drill03_OneToManyInstructorTracks;
+using EFCoreModelingDrills.Drill04_ManyToManyEnrollment;
+using EFCoreModelingDrills.Drill05_PaymentSummary;
+using EFCoreModelingDrills.Drill06_SeedData;
 using Microsoft.EntityFrameworkCore;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -24,8 +27,10 @@ try
     await Drill01Runner.RunAsync(context);
     await Drill02Runner.RunAsync(context);
     await Drill03Runner.RunAsync(context);
-
-}
+    await Drill04Runner.RunAsync(context);
+    await Drill05Runner.RunAsync(context);
+    await Drill06Runner.RunAsync(context);
+ }
 catch (Exception ex)
 {
     Console.ForegroundColor = ConsoleColor.Red;

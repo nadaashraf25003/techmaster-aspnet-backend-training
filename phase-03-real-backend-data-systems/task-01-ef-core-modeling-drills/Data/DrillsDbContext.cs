@@ -2,6 +2,9 @@ using EFCoreModelingDrills.Common;
 using EFCoreModelingDrills.Drill01_DbContextFirstMigration;
 using EFCoreModelingDrills.Drill02_OneToOneStudentProfile;
 using EFCoreModelingDrills.Drill03_OneToManyInstructorTracks;
+using EFCoreModelingDrills.Drill04_ManyToManyEnrollment;
+using EFCoreModelingDrills.Drill05_PaymentSummary;
+using EFCoreModelingDrills.Drill06_SeedData;
 using Microsoft.EntityFrameworkCore;
 
 namespace EFCoreModelingDrills.Data;
@@ -28,7 +31,8 @@ public class DrillsDbContext : DbContext
     public DbSet<StudentProfile> StudentProfiles => Set<StudentProfile>();
     public DbSet<Instructor> Instructors => Set<Instructor>();
     public DbSet<TrainingTrack> TrainingTracks => Set<TrainingTrack>();
-
+    public DbSet<Enrollment> Enrollments => Set<Enrollment>();
+    public DbSet<PaymentSummary> PaymentSummaries => Set<PaymentSummary>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -99,7 +103,49 @@ public class DrillsDbContext : DbContext
             entity.HasQueryFilter(t => !t.IsDeleted);
         });
 
+        // ----------------------------------------------------
+        // Drill 04: M:N Enrollment Join Entity Configuration
+        // ----------------------------------------------------
+        modelBuilder.Entity<Enrollment>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.FinalGrade).HasPrecision(5, 2);
 
+            entity.HasOne(e => e.Student)
+                  .WithMany(s => s.Enrollments)
+                  .HasForeignKey(e => e.StudentId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.TrainingTrack)
+                  .WithMany(t => t.Enrollments)
+                  .HasForeignKey(e => e.TrainingTrackId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasQueryFilter(e => !e.IsDeleted);
+        });
+
+        // ----------------------------------------------------
+        // Drill 05: 1:1 Enrollment <-> PaymentSummary
+        // ----------------------------------------------------
+        modelBuilder.Entity<PaymentSummary>(entity =>
+        {
+            entity.HasKey(ps => ps.Id);
+            entity.Property(ps => ps.TotalRequired).HasPrecision(18, 2);
+            entity.Property(ps => ps.TotalPaid).HasPrecision(18, 2);
+
+            entity.HasOne(ps => ps.Enrollment)
+                  .WithOne(e => e.PaymentSummary)
+                  .HasForeignKey<PaymentSummary>(ps => ps.EnrollmentId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(ps => ps.EnrollmentId).IsUnique();
+            entity.HasQueryFilter(ps => !ps.IsDeleted);
+        });
+
+        // ----------------------------------------------------
+        // Drill 06: Apply Seed Data
+        // ----------------------------------------------------
+        modelBuilder.SeedDrillData();
     }
 
 }
