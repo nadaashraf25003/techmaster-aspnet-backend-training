@@ -5,6 +5,10 @@ using EFCoreModelingDrills.Drill03_OneToManyInstructorTracks;
 using EFCoreModelingDrills.Drill04_ManyToManyEnrollment;
 using EFCoreModelingDrills.Drill05_PaymentSummary;
 using EFCoreModelingDrills.Drill06_SeedData;
+using EFCoreModelingDrills.Drill07_SoftDelete;
+using EFCoreModelingDrills.Drill08_AuditFields;
+using EFCoreModelingDrills.Drill09_ProjectionDTO;
+using EFCoreModelingDrills.Drill10_Pagination;
 using Microsoft.EntityFrameworkCore;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -30,7 +34,15 @@ try
     await Drill04Runner.RunAsync(context);
     await Drill05Runner.RunAsync(context);
     await Drill06Runner.RunAsync(context);
- }
+    await Drill07Runner.RunAsync(context);
+    await Drill08Runner.RunAsync(context);
+    await Drill09Runner.RunAsync(context);
+    await Drill10Runner.RunAsync(context);
+
+    Console.WriteLine("\n================================================================================");
+    Console.WriteLine("🎉 ALL 10 EF CORE MODELING DRILLS COMPLETED SUCCESSFULLY WITH 100% PASS RATE!");
+    Console.WriteLine("================================================================================");
+}
 catch (Exception ex)
 {
     Console.ForegroundColor = ConsoleColor.Red;

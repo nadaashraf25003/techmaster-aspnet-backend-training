@@ -148,4 +148,27 @@ public class DrillsDbContext : DbContext
         modelBuilder.SeedDrillData();
     }
 
+    // --------------------------------------------------------
+    // Drill 08: Automatic UTC Audit Tracking Interceptor
+    // --------------------------------------------------------
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var entries = ChangeTracker.Entries<BaseAuditableEntity>();
+        var now = DateTime.UtcNow;
+
+        foreach (var entry in entries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreatedAt = now;
+                entry.Entity.IsDeleted = false;
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                entry.Entity.UpdatedAt = now;
+            }
+        }
+    
+        return base.SaveChangesAsync(cancellationToken);
+    }
 }
