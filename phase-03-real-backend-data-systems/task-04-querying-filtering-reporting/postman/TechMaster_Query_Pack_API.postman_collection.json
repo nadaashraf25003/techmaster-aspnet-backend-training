@@ -1,0 +1,277 @@
+{
+	"info": {
+		"_postman_id": "8f3b219e-c852-47ef-bc61-task04coll001",
+		"name": "TechMaster Academy - Task 04 Query Pack & Reporting API",
+		"description": "Comprehensive Postman test suite for Task 04: Querying, Filtering, and Reporting (Queries 13 to 20). Includes automated assertions, validation tests, and contract checks.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01. Core Query Specifications (Queries 13 - 20)",
+			"item": [
+				{
+					"name": "Query 13 - Payments By Date Range (Valid Range: July 2026)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/payments?from=2026-07-01&to=2026-07-31&pageNumber=1&pageSize=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "payments"],
+							"query": [
+								{ "key": "from", "value": "2026-07-01" },
+								{ "key": "to", "value": "2026-07-31" },
+								{ "key": "pageNumber", "value": "1" },
+								{ "key": "pageSize", "value": "10" }
+							]
+						},
+						"description": "Query 13: Filters payments between 2026-07-01 and 2026-07-31 using EF Core Where PaymentDate between from and to."
+					},
+					"response": []
+				},
+				{
+					"name": "Query 13 - Payments Validation Test (Invalid Range: from > to)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/payments?from=2026-08-01&to=2026-07-01",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "payments"],
+							"query": [
+								{ "key": "from", "value": "2026-08-01" },
+								{ "key": "to", "value": "2026-07-01" }
+							]
+						},
+						"description": "Query 13 Validation: Asserts that passing from > to yields HTTP 400 Bad Request with a clear validation error message."
+					},
+					"response": []
+				},
+				{
+					"name": "Query 14 - Revenue Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reports/revenue-summary",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reports", "revenue-summary"]
+						},
+						"description": "Query 14: Calculates total revenue, paid count, pending count, failed count, and average payment amount with decimal precision."
+					},
+					"response": []
+				},
+				{
+					"name": "Query 15 - Revenue Per Track",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reports/revenue-by-track",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reports", "revenue-by-track"]
+						},
+						"description": "Query 15: Groups paid payments by track, returning track title, total paid amount, unit price, and enrollment count."
+					},
+					"response": []
+				},
+				{
+					"name": "Query 16 - Top Tracks By Enrollment (Default Top 5)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reports/top-tracks",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reports", "top-tracks"]
+						},
+						"description": "Query 16: Returns tracks ordered by active enrollment count in descending order (top 5 by default)."
+					},
+					"response": []
+				},
+				{
+					"name": "Query 16 - Top Tracks By Enrollment (Top 3 Parameter)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reports/top-tracks?count=3",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reports", "top-tracks"],
+							"query": [
+								{ "key": "count", "value": "3" }
+							]
+						},
+						"description": "Query 16 Parameterized: Returns exactly top 3 tracks ordered by active enrollment count."
+					},
+					"response": []
+				},
+				{
+					"name": "Query 17 - Instructor Workload",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reports/instructor-workload",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reports", "instructor-workload"]
+						},
+						"description": "Query 17: Returns each instructor with number of tracks, active tracks, and active students supervised."
+					},
+					"response": []
+				},
+				{
+					"name": "Query 18 - Students Without Payments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reports/students-without-payments",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reports", "students-without-payments"]
+						},
+						"description": "Query 18: Returns students with Active or Pending enrollments who have zero completed payments. Strictly excludes cancelled enrollments."
+					},
+					"response": []
+				},
+				{
+					"name": "Query 19 - Advanced Enrollment Filter (Track 1, Active, Paid)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/enrollments?trackId=1&status=Active&paymentStatus=Paid",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "enrollments"],
+							"query": [
+								{ "key": "trackId", "value": "1" },
+								{ "key": "status", "value": "Active" },
+								{ "key": "paymentStatus", "value": "Paid" }
+							]
+						},
+						"description": "Query 19: Combines multiple filters safely using conditional IQueryable composition."
+					},
+					"response": []
+				},
+				{
+					"name": "Query 19 - Advanced Enrollment Filter (Status=Pending)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/enrollments?status=Pending",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "enrollments"],
+							"query": [
+								{ "key": "status", "value": "Pending" }
+							]
+						},
+						"description": "Query 19: Filters enrollments dynamically by status=Pending."
+					},
+					"response": []
+				},
+				{
+					"name": "Query 20 - Dashboard Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reports/dashboard-summary",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reports", "dashboard-summary"]
+						},
+						"description": "Query 20: Aggregates system metrics (studentsCount, tracksCount, activeEnrollments, revenue, unpaidCount)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "02. Supporting Reporting Endpoints",
+			"item": [
+				{
+					"name": "Get Unpaid Enrollments Report",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reports/unpaid-enrollments",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reports", "unpaid-enrollments"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Track Capacity Report",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reports/track-capacity",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reports", "track-capacity"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "03. Domain Entities CRUD & Verification",
+			"item": [
+				{
+					"name": "Get All Students",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/students?pageNumber=1&pageSize=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "students"],
+							"query": [
+								{ "key": "pageNumber", "value": "1" },
+								{ "key": "pageSize", "value": "10" }
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Tracks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/tracks?pageNumber=1&pageSize=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "tracks"],
+							"query": [
+								{ "key": "pageNumber", "value": "1" },
+								{ "key": "pageSize", "value": "10" }
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Instructors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/instructors?pageNumber=1&pageSize=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "instructors"],
+							"query": [
+								{ "key": "pageNumber", "value": "1" },
+								{ "key": "pageSize", "value": "10" }
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
