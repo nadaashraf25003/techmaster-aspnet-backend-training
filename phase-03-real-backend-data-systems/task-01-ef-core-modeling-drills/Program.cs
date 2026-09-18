@@ -16,13 +16,15 @@ Console.WriteLine("=============================================================
 Console.WriteLine("🚀 TechMaster Academy - Phase 03: Task 01 - EF Core Modeling Drills (10 Drills)");
 Console.WriteLine("================================================================================");
 
-// Configure in-memory database instance seeded with deterministic test data for instant verification
+// Configure SQL Server LocalDB instance
+var connectionString = "Server=(localdb)\\mssqllocaldb;Database=TechMaster_Drills_Db;Trusted_Connection=True;TrustServerCertificate=True;";
 var options = new DbContextOptionsBuilder<DrillsDbContext>()
-    .UseInMemoryDatabase(databaseName: "TechMaster_Drills_Db_" + Guid.NewGuid())
+    .UseSqlServer(connectionString)
     .EnableSensitiveDataLogging()
     .Options;
 
 using var context = new DrillsDbContext(options);
+await context.Database.EnsureDeletedAsync();
 await context.Database.EnsureCreatedAsync();
 
 try
