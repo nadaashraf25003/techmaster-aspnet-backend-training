@@ -1,0 +1,577 @@
+{
+  "info": {
+    "_postman_id": "c71a39f1-9488-4f8e-b5cb-05d6e2e03940",
+    "name": "TechMaster Task 05 - Business Rules & Data Integrity API",
+    "description": "Comprehensive Postman test collection validating all business rules, data integrity constraints, entity lifecycle rules, soft-delete safeguards, and analytics reports for TechMaster Backend Training Phase 03 - Task 05.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Student Business Rules",
+      "item": [
+        {
+          "name": "Valid - Register New Student",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Youssef Mansour\",\n  \"email\": \"youssef.mansour@techmaster.edu\",\n  \"phoneNumber\": \"+201144556677\",\n  \"dateOfBirth\": \"2001-09-12T00:00:00Z\",\n  \"address\": \"Nasr City, Cairo\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule S1 - Reject Duplicate Student Email (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Another Nada\",\n  \"email\": \"nada.ashraf@gmail.com\",\n  \"phoneNumber\": \"+201199887766\",\n  \"dateOfBirth\": \"2000-01-01T00:00:00Z\",\n  \"address\": \"Cairo\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule S2 - Reject Empty FullName (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"\",\n  \"email\": \"noname.student@gmail.com\",\n  \"phoneNumber\": \"+201100112233\",\n  \"dateOfBirth\": \"2000-01-01T00:00:00Z\",\n  \"address\": \"Alexandria\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule S3 - Get Active Students (Soft-Deleted Excluded)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students?pageNumber=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"],
+              "query": [
+                {
+                  "key": "pageNumber",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule S4 - Soft Delete Student Safely",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students/7",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students", "7"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule S5 - Reject Enrollment for Inactive Student (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 5,\n  \"trainingTrackId\": 1,\n  \"notes\": \"Attempting to enroll inactive student (Tarek)\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Track Business Rules",
+      "item": [
+        {
+          "name": "Valid - Create Training Track",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Cloud Native DevOps with Kubernetes\",\n  \"code\": \"DEVOPS-K8S-2026\",\n  \"description\": \"Mastering Docker, CI/CD with GitHub Actions, Terraform, and K8s in production.\",\n  \"price\": 9000.00,\n  \"durationHours\": 110,\n  \"capacity\": 12,\n  \"status\": \"Upcoming\",\n  \"startDate\": \"2026-10-01T00:00:00Z\",\n  \"endDate\": \"2026-12-15T00:00:00Z\",\n  \"primaryInstructorId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tracks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tracks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule T1 - Reject Duplicate Track Code (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Duplicate ASP.NET Track\",\n  \"code\": \"NET-BE-2026\",\n  \"description\": \"Duplicate code test.\",\n  \"price\": 8500.00,\n  \"durationHours\": 100,\n  \"capacity\": 10,\n  \"status\": \"Upcoming\",\n  \"startDate\": \"2026-10-01T00:00:00Z\",\n  \"endDate\": \"2026-12-01T00:00:00Z\",\n  \"primaryInstructorId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tracks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tracks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule T3 - Reject Non-Positive Capacity (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Zero Capacity Track\",\n  \"code\": \"ZERO-CAP-2026\",\n  \"description\": \"Testing zero capacity rejection.\",\n  \"price\": 3000.00,\n  \"durationHours\": 50,\n  \"capacity\": 0,\n  \"status\": \"Upcoming\",\n  \"startDate\": \"2026-10-01T00:00:00Z\",\n  \"endDate\": \"2026-11-01T00:00:00Z\",\n  \"primaryInstructorId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tracks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tracks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule T3b - Reject StartDate >= EndDate (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Invalid Dates Track\",\n  \"code\": \"INVALID-DATE-2026\",\n  \"description\": \"Testing date chronological ordering rule.\",\n  \"price\": 4000.00,\n  \"durationHours\": 60,\n  \"capacity\": 15,\n  \"status\": \"Upcoming\",\n  \"startDate\": \"2026-12-01T00:00:00Z\",\n  \"endDate\": \"2026-10-01T00:00:00Z\",\n  \"primaryInstructorId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tracks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tracks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule T4 - Reject Inactive Instructor Assignment (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Track with Inactive Instructor\",\n  \"code\": \"INACTIVE-INST-2026\",\n  \"description\": \"Testing instructor active status check.\",\n  \"price\": 5500.00,\n  \"durationHours\": 80,\n  \"capacity\": 10,\n  \"status\": \"Upcoming\",\n  \"startDate\": \"2026-11-01T00:00:00Z\",\n  \"endDate\": \"2026-12-31T00:00:00Z\",\n  \"primaryInstructorId\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tracks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tracks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule T5 - Reject Enrollment When Track is FULL (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1,\n  \"trainingTrackId\": 2,\n  \"notes\": \"Attempting to enroll in REACT-FULL-2026 which has capacity 2 and 2 active enrollments\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule T6 - Reject Enrollment on Closed Track (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1,\n  \"trainingTrackId\": 3,\n  \"notes\": \"Attempting to enroll in ARCH-CLOSED-2026 which is Closed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Enrollment Business Rules",
+      "item": [
+        {
+          "name": "Valid - Create New Enrollment (Pending Default)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 4,\n  \"trainingTrackId\": 1,\n  \"notes\": \"Omar Farouk enrolling in ASP.NET BootCamp\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule E1 - Reject Duplicate Active/Pending Enrollment (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1,\n  \"trainingTrackId\": 1,\n  \"notes\": \"Nada is already actively enrolled in NET-BE-2026\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule E4 - Reject Cancelling Completed Enrollment (400)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Cancelled\",\n  \"notes\": \"Trying to cancel completed graduation record for Mariam\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments/5/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments", "5", "status"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule E5 - Cancelled Enrollments Ignored in Capacity",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/track-capacities",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "track-capacities"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Payment Business Rules",
+      "item": [
+        {
+          "name": "Valid - Record Valid Installment Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enrollmentId\": 2,\n  \"amount\": 3500.00,\n  \"paymentMethod\": \"VodafoneCash\",\n  \"notes\": \"Settling remaining balance for Ahmed Mansour\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule P1 - Reject Zero or Negative Payment Amount (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enrollmentId\": 2,\n  \"amount\": 0.00,\n  \"paymentMethod\": \"Cash\",\n  \"notes\": \"Testing zero payment rejection\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule P2 - Reject Overpayment (Amount > Remaining Balance) (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enrollmentId\": 1,\n  \"amount\": 5000.00,\n  \"paymentMethod\": \"CreditCard\",\n  \"notes\": \"Nada already fully paid 8500 out of 8500. Overpayment should be rejected!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rule P6 - Reject Payment on Cancelled Enrollment (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enrollmentId\": 6,\n  \"amount\": 1000.00,\n  \"paymentMethod\": \"Fawry\",\n  \"notes\": \"Attempting to pay on cancelled enrollment ID 6 (Khaled)\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Business Reports & Integrity Analytics",
+      "item": [
+        {
+          "name": "Report - Revenue Summary (Completed Only)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/revenue-summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "revenue-summary"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Revenue Breakdown By Track",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/revenue-by-track",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "revenue-by-track"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Top Tracks By Enrollment & Utilization",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/top-tracks?count=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "top-tracks"],
+              "query": [
+                {
+                  "key": "count",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Instructor Workload & Supervised Students",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/instructor-workload",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "instructor-workload"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Students Without Payments (Unpaid Enrollments)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/students-without-payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "students-without-payments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Dashboard Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/dashboard-summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "dashboard-summary"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Report - Real-Time Track Capacities & Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/track-capacities",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "track-capacities"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
