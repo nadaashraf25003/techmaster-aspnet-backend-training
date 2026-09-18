@@ -1,0 +1,563 @@
+{
+  "info": {
+    "name": "TechMaster Academy - Training Center Registration API",
+    "_postman_id": "9b12a84c-5501-4f93-b6d1-techmaster99",
+    "description": "Complete Postman collection covering all CRUD operations, validations, status transitions, business rules, and analytical reports for Phase 03 Task 03.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Students",
+      "item": [
+        {
+          "name": "GET /api/students (Paginated & Search)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students?pageNumber=1&pageSize=10&searchTerm=nada&isActive=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"],
+              "query": [
+                { "key": "pageNumber", "value": "1" },
+                { "key": "pageSize", "value": "10" },
+                { "key": "searchTerm", "value": "nada" },
+                { "key": "isActive", "value": "true" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/students/{id} (Success)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students/{{studentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students", "{{studentId}}"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/students/{id} (Failure - 404 Not Found)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students/99999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students", "99999"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/students (Create Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Amr Khaled\",\n  \"email\": \"amr.khaled@student.techmaster.net\",\n  \"phoneNumber\": \"+201099887766\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/students (Failure - 409 Duplicate Email)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Duplicate Nada\",\n  \"email\": \"nada.ashraf@student.techmaster.net\",\n  \"phoneNumber\": \"+201001234567\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"]
+            }
+          }
+        },
+        {
+          "name": "PUT /api/students/{id} (Update Info)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Nada Ashraf Updated\",\n  \"email\": \"nada.ashraf@student.techmaster.net\",\n  \"phoneNumber\": \"+201001234567\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students/{{studentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students", "{{studentId}}"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/students/{id}/enrollments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students/{{studentId}}/enrollments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students", "{{studentId}}", "enrollments"]
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/students/{id} (Soft Delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students/6",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students", "6"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Instructors",
+      "item": [
+        {
+          "name": "GET /api/instructors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/instructors?isActive=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "instructors"],
+              "query": [{ "key": "isActive", "value": "true" }]
+            }
+          }
+        },
+        {
+          "name": "GET /api/instructors/{id}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/instructors/{{instructorId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "instructors", "{{instructorId}}"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/instructors (Create)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Eng. Tarek Gamal\",\n  \"email\": \"tarek.gamal@techmaster.net\",\n  \"specialization\": \"Cybersecurity & Ethical Hacking\",\n  \"bio\": \"Certified CISSP instructor.\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/instructors",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "instructors"]
+            }
+          }
+        },
+        {
+          "name": "PUT /api/instructors/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Eng. Ahmed Hassan\",\n  \"email\": \"ahmed.hassan@techmaster.net\",\n  \"specialization\": \".NET & Enterprise Cloud Architecture\",\n  \"bio\": \"Senior Architect with 15+ years experience.\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/instructors/{{instructorId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "instructors", "{{instructorId}}"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/instructors/{id}/tracks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/instructors/{{instructorId}}/tracks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "instructors", "{{instructorId}}", "tracks"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Tracks",
+      "item": [
+        {
+          "name": "GET /api/tracks (Filter & Search)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tracks?keyword=ASP.NET&level=Advanced&pageNumber=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tracks"],
+              "query": [
+                { "key": "keyword", "value": "ASP.NET" },
+                { "key": "level", "value": "Advanced" },
+                { "key": "pageNumber", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/tracks/{id}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tracks/{{trackId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tracks", "{{trackId}}"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/tracks (Create Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Cloud Native Microservices with .NET 10\",\n  \"code\": \"CLOUD-NET-2026\",\n  \"description\": \"Building scalable microservices with gRPC, Dapr, and Azure.\",\n  \"level\": \"Advanced\",\n  \"price\": 5800.00,\n  \"capacity\": 15,\n  \"startDate\": \"2026-11-01\",\n  \"endDate\": \"2027-02-28\",\n  \"status\": \"Upcoming\",\n  \"instructorId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tracks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tracks"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/tracks (Failure - Invalid Dates 400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Invalid Date Track\",\n  \"code\": \"BAD-DATE-001\",\n  \"level\": \"Beginner\",\n  \"price\": 2000.00,\n  \"capacity\": 10,\n  \"startDate\": \"2026-12-01\",\n  \"endDate\": \"2026-10-01\",\n  \"status\": \"Draft\",\n  \"instructorId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tracks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tracks"]
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/tracks/{id} (Failure - Active Enrollments 400)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tracks/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tracks", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/tracks/{id}/students",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tracks/{{trackId}}/students",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tracks", "{{trackId}}", "students"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Enrollments",
+      "item": [
+        {
+          "name": "GET /api/enrollments (Filter by Status)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments?status=Active&pageNumber=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments"],
+              "query": [
+                { "key": "status", "value": "Active" },
+                { "key": "pageNumber", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/enrollments/{id}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments/{{enrollmentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments", "{{enrollmentId}}"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/enrollments (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 2,\n  \"trainingTrackId\": 2,\n  \"status\": \"Active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/enrollments (Failure - Duplicate 409)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1,\n  \"trainingTrackId\": 1,\n  \"status\": \"Active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/enrollments (Failure - Track Full 400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 4,\n  \"trainingTrackId\": 1,\n  \"status\": \"Active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments"]
+            }
+          }
+        },
+        {
+          "name": "PUT /api/enrollments/{id}/status",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Completed\",\n  \"progressPercentage\": 100.00,\n  \"finalResult\": \"Distinction\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments/{{enrollmentId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments", "{{enrollmentId}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/enrollments/{id}/payments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments/{{enrollmentId}}/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments", "{{enrollmentId}}", "payments"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Payments",
+      "item": [
+        {
+          "name": "GET /api/payments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments?status=Completed&pageNumber=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments"],
+              "query": [
+                { "key": "status", "value": "Completed" },
+                { "key": "pageNumber", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/payments/{id}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/{{paymentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "{{paymentId}}"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/payments (Create Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enrollmentId\": 2,\n  \"amount\": 2500.00,\n  \"paymentMethod\": \"CreditCard\",\n  \"referenceNumber\": \"PAY-API-20260918-099\",\n  \"paymentStatus\": \"Completed\",\n  \"notes\": \"Final balance settlement.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/payments (Failure - Duplicate Ref 409)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enrollmentId\": 1,\n  \"amount\": 1000.00,\n  \"paymentMethod\": \"Cash\",\n  \"referenceNumber\": \"PAY-20260815-001\",\n  \"paymentStatus\": \"Completed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments"]
+            }
+          }
+        },
+        {
+          "name": "PUT /api/payments/{id}/status",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Refunded\",\n  \"notes\": \"Customer requested full refund due to scheduling clash.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/{{paymentId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "{{paymentId}}", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Reports",
+      "item": [
+        {
+          "name": "GET /api/reports/dashboard-summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/dashboard-summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "dashboard-summary"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/reports/unpaid-enrollments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/unpaid-enrollments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "unpaid-enrollments"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/reports/track-capacity",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/track-capacity",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "track-capacity"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/reports/revenue-summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/revenue-summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "revenue-summary"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/reports/revenue-by-track",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/revenue-by-track",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "revenue-by-track"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/reports/instructor-workload",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/instructor-workload",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "instructor-workload"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
