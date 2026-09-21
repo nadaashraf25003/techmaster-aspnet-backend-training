@@ -6,13 +6,13 @@
 
 ---
 
-## 🎯 Phase 03 Overview & Mission
+##  Phase 03 Overview & Mission
 
 In Phase 01, we established solid C# OOP foundations, data manipulation, and refactoring practices.  
 In Phase 02, we transitioned into ASP.NET Core Web API architecture, DTOs, layered services, Swagger, and RESTful routing standards.  
 **Phase 03 transforms the API into a real-world, database-driven backend system powered by Entity Framework Core (EF Core), Microsoft SQL Server, and remote cloud hosting.**
 
-### 🏆 Definition of Done (DoD)
+###  Definition of Done (DoD)
 1. **Local API Works with SQL Server:** Full relational schema mapped with EF Core DbContext, migrations, and navigations.
 2. **Remote Database Configured:** Cloud/Remote SQL Server instance provisioned without exposing credentials.
 3. **Live Swagger URL:** Deployed and accessible online on cloud hosting.
@@ -21,7 +21,7 @@ In Phase 02, we transitioned into ASP.NET Core Web API architecture, DTOs, layer
 
 ---
 
-## 📂 Phase 03 Repository Structure
+##  Phase 03 Repository Structure
 
 ```text
 phase-03-real-backend-data-systems/
@@ -39,7 +39,7 @@ phase-03-real-backend-data-systems/
 
 ---
 
-## 📊 Evaluation Rubric (100 Points Model)
+##  Evaluation Rubric (100 Points Model)
 
 | Component | Weight | Key Assessment Criteria |
 | :--- | :---: | :--- |
@@ -53,7 +53,7 @@ phase-03-real-backend-data-systems/
 
 ---
 
-## 📅 10-Day Sprint Execution Plan
+##  10-Day Sprint Execution Plan
 
 * **Days 1–2 (Tasks 00 & 01):** Workspace environment setup, EF Core SQL Server configuration, 10 modeling drills (1:1, 1:N, M:N, Soft Delete, Audit, Projections, Pagination).
 * **Days 3–5 (Tasks 02 & 03):** Business requirements translation into ERD, Training Center API core entities, migrations, and layered endpoints.
@@ -63,7 +63,7 @@ phase-03-real-backend-data-systems/
 
 ---
 
-## 🛡️ Production Mindset & Standards
+##  Production Mindset & Standards
 
 1. **No Hardcoded Secrets:** Connection strings and passwords must never be committed to Git.
 2. **DTOs Everywhere:** Never leak EF entities directly in API endpoints.

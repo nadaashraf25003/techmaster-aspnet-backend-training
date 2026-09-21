@@ -1,38 +1,90 @@
-# .NET build output
-bin/
-obj/
-
-# Visual Studio
-.vs/
-
-# VS Code
-.vscode/
-
-# User-specific files
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-
-# Build results
+# ==========================================
+# .NET Build and Publish Output
+# ==========================================
+[Bb]in/
+[Oo]bj/
+[Pp]ublish/
+**/publish/
+**/PubTmp/
 [Dd]ebug/
 [Rr]elease/
 x64/
 x86/
+bld/
+[Bb]uild/
 
-# Test results
+# ==========================================
+# Visual Studio & IDE Files
+# ==========================================
+.vs/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.userprefs
+*.vspscc
+*.vssscc
+
+# VS Code & JetBrains
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.DotSettings.user
+
+# ==========================================
+# Test Results & Coverage
+# ==========================================
 TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+coverage/
+*.coverage
+*.coveragexml
 
-# NuGet
+# ==========================================
+# NuGet Packages
+# ==========================================
 *.nupkg
 *.snupkg
+**/packages/
+!**/packages/build/
 
-# OS files
+# ==========================================
+# Secrets, Credentials & Local Settings
+# ==========================================
+secrets.json
+appsettings.local.json
+appsettings.*.local.json
+appsettings.secrets.json
+.env
+.env.*
+!.env.example
+
+# ==========================================
+# Local Databases & Backups
+# ==========================================
+*.mdf
+*.ldf
+*.ndf
+*.db
+*.db-shm
+*.db-wal
+
+# ==========================================
+# OS & Log Files
+# ==========================================
+*.log
+*.tmp
+*.temp
 .DS_Store
 Thumbs.db
+ehthumbs.db
 
-# Logs
-*.log
-
-# ruless
+# ==========================================
+# Project specific
+# ==========================================
 .ruless/
+

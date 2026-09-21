@@ -1,0 +1,323 @@
+{
+  "info": {
+    "_postman_id": "70ee01be-46c8-4ee3-a502-task06-collection",
+    "name": "TechMaster Phase 03 - Task 06 Production API Suite",
+    "description": "Comprehensive automated testing suite for Task 06: Production Cloud Hosting & Remote Microsoft SQL Server Database.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01. Production Health & Swagger",
+      "item": [
+        {
+          "name": "Health Check Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API Health Check (Controller)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Live Swagger JSON",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/swagger/v1/swagger.json",
+              "host": ["{{baseUrl}}"],
+              "path": ["swagger", "v1", "swagger.json"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02. Remote DB Read Endpoints (GET)",
+      "item": [
+        {
+          "name": "Get All Training Tracks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tracks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tracks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Track By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tracks/{{trackId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tracks", "{{trackId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Students List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/students?pageNumber=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"],
+              "query": [
+                { "key": "pageNumber", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Instructors List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/instructors",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "instructors"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Enrollments List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payments List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Dashboard Summary Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/dashboard-summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "dashboard-summary"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Revenue Summary Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/revenue-summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "revenue-summary"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Track Capacities Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/track-capacities",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "track-capacities"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03. Remote DB Write Endpoints (POST / PUT / PATCH)",
+      "item": [
+        {
+          "name": "Register New Student (Write to Remote DB)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Youssef Mahmoud Ibrahim\",\n  \"email\": \"youssef.mahmoud.remote@techmail.com\",\n  \"phoneNumber\": \"+201155554444\",\n  \"dateOfBirth\": \"2001-09-15T00:00:00Z\",\n  \"address\": \"New Cairo, Egypt\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Enrollment (Write to Remote DB)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1,\n  \"trainingTrackId\": 4,\n  \"notes\": \"Production online registration test\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Record Payment (Write to Remote DB)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enrollmentId\": 2,\n  \"amount\": 3500.00,\n  \"paymentMethod\": \"CreditCard\",\n  \"paymentDate\": \"2026-09-21T18:00:00Z\",\n  \"paymentStatus\": \"Completed\",\n  \"notes\": \"Live online tuition installment payment\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Enrollment Status (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Active\",\n  \"progressPercentage\": 25.0,\n  \"notes\": \"Course in progress\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments/2/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments", "2", "status"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04. Production Business Integrity Validation",
+      "item": [
+        {
+          "name": "Negative: Duplicate Student Email (Expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Duplicate Email Test\",\n  \"email\": \"nada.ashraf@gmail.com\",\n  \"phoneNumber\": \"+201100001111\",\n  \"dateOfBirth\": \"2002-05-14T00:00:00Z\",\n  \"address\": \"Cairo\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/students",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "students"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Negative: Overpayment Rejection (Expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enrollmentId\": 1,\n  \"amount\": 50000.00,\n  \"paymentMethod\": \"CreditCard\",\n  \"notes\": \"Attempting payment exceeding remaining balance\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Negative: Full Track Capacity Guard (Expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1,\n  \"trainingTrackId\": 2,\n  \"notes\": \"Attempting to enroll in a full track (Capacity = 2)\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/enrollments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "enrollments"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
