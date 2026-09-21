@@ -71,7 +71,7 @@ Before cloud deployment, verify the entire solution locally:
 2. Create a new website/app with ASP.NET Core support.
 3. Choose the appropriate runtime version (.NET 10.0 or publish as self-contained).
 4. Enable **HTTPS (SSL Certificate)** in the domain settings.
-5. Record your live site URL (e.g., `https://[your-app-name].monsterasp.net`).
+5. Record your live site URL: [https://tech-master-training.runasp.net/index.html](https://tech-master-training.runasp.net/index.html).
 
 ---
 
@@ -121,8 +121,8 @@ dotnet publish phase-03-real-backend-data-systems/task-06-production-hosting-rem
 - Ensure [`web.config`](TrainingCenter.Api/web.config) is present at the root.
 
 #### Live Verification Checklist:
-- [x] **Live Swagger UI**: Navigate to `https://[your-app].monsterasp.net/` (served directly at root `/`).
-- [x] **Health Check**: `GET /health` returns `200 OK` with `DatabaseConnected: true`.
+- [x] **Live Swagger UI**: [https://tech-master-training.runasp.net/index.html](https://tech-master-training.runasp.net/index.html) (also served at root `/`).
+- [x] **Health Check**: `GET https://tech-master-training.runasp.net/health` returns `200 OK` with `DatabaseConnected: true`.
 - [x] **Read from Remote DB (GET)**: `GET /api/reports/dashboard-summary` returns live statistics from remote SQL Server.
 - [x] **Write to Remote DB (POST)**: `POST /api/students` creates a new persistent student in remote SQL Server.
 - [x] **Business Rule Enforcement**: `POST /api/payments` rejects overpayment with `400 Bad Request`.

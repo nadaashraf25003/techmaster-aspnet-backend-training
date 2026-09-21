@@ -17,8 +17,8 @@ The Training Center API has been transformed from a local development service in
 | **API Protocol** | HTTP / HTTPS | **HTTPS Enabled (SSL/TLS)** |
 | **API Architecture** | ASP.NET Core Web API (.NET 10.0) | **ASP.NET Core Web API (.NET 10.0)** |
 | **ORM & Migrations** | EF Core 10.0 Code-First | **EF Core Auto-Migration on Startup (`MigrateAsync()`)** |
-| **Live Swagger UI** | `http://localhost:5090/` | `https://[your-app].monsterasp.net/` |
-| **Health Check URL** | `http://localhost:5090/health` | `https://[your-app].monsterasp.net/health` |
+| **Live Swagger UI** | `http://localhost:5090/` | [https://tech-master-training.runasp.net/index.html](https://tech-master-training.runasp.net/index.html) |
+| **Health Check URL** | `http://localhost:5090/health` | [https://tech-master-training.runasp.net/health](https://tech-master-training.runasp.net/health) |
 | **Secret Management** | Local User Secrets / `appsettings.json` | **MonsterASP Environment Settings (No Secrets in Git)** |
 
 ---
@@ -135,7 +135,7 @@ dotnet publish TrainingCenter.Api/TrainingCenter.Api.csproj -c Release -o ./publ
 #### A. Health Check Online
 ```http
 GET /health
-Host: https://[your-app].monsterasp.net
+Host: https://tech-master-training.runasp.net
 ```
 **Response (`HTTP 200 OK`):**
 ```json
@@ -150,7 +150,7 @@ Host: https://[your-app].monsterasp.net
 #### B. Read Endpoint Online (GET)
 ```http
 GET /api/reports/dashboard-summary
-Host: https://[your-app].monsterasp.net
+Host: https://tech-master-training.runasp.net
 ```
 **Response (`HTTP 200 OK`):**
 ```json
@@ -180,7 +180,7 @@ Host: https://[your-app].monsterasp.net
 #### C. Write Endpoint Online (POST)
 ```http
 POST /api/students
-Host: https://[your-app].monsterasp.net
+Host: https://tech-master-training.runasp.net
 Content-Type: application/json
 
 {
@@ -216,7 +216,7 @@ Content-Type: application/json
 #### D. Production Business Rule Guard Online (BR-P2 Overpayment Rejection)
 ```http
 POST /api/payments
-Host: https://[your-app].monsterasp.net
+Host: https://tech-master-training.runasp.net
 Content-Type: application/json
 
 {
