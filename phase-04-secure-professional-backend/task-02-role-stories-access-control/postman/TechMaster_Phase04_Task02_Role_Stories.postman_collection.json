@@ -1,0 +1,388 @@
+{
+  "info": {
+    "_postman_id": "b1c2d3e4-f5a6-47b8-8c9d-0e1f2a3b4c5d",
+    "name": "TechMaster Phase 04 - Task 02: Role Stories & Access Control",
+    "description": "Comprehensive Postman test suite validating the 8 mandatory Task 02 authorization scenarios, role stories (Admin, Instructor, Student), cross-user data isolation, and boundary enforcement.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "00. Auth Setup (Get Tokens)",
+      "item": [
+        {
+          "name": "00a - Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Admin login succeeded\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"admin_token\", jsonData.data.accessToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@techmaster.com\",\n  \"password\": \"Admin@123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "00b - Login Instructor (Eng. Mohamed Ali - InstructorId 1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Instructor login succeeded\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"instructor_token\", jsonData.data.accessToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"instructor@techmaster.com\",\n  \"password\": \"Instructor@123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "00c - Login Student (Nada Ashraf - StudentId 1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Student login succeeded\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"student_token\", jsonData.data.accessToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"student@techmaster.com\",\n  \"password\": \"Student@123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "01. Mandatory Access Matrix Tests (8 Required Tests)",
+      "item": [
+        {
+          "name": "Test 1 - No token accesses admin report (Expected: 401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401 Unauthorized\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/reports/revenue-summary",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reports", "revenue-summary"]
+            }
+          }
+        },
+        {
+          "name": "Test 2 - Student token accesses admin report (Expected: 403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403 Forbidden\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{student_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/reports/revenue-summary",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reports", "revenue-summary"]
+            }
+          }
+        },
+        {
+          "name": "Test 3 - Instructor sees own tracks (Expected: 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Instructor tracks returned\", function () {",
+                  "    pm.expect(jsonData.success).to.be.true;",
+                  "    pm.expect(jsonData.data).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{instructor_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/instructor/my-tracks",
+              "host": ["{{base_url}}"],
+              "path": ["api", "instructor", "my-tracks"]
+            }
+          }
+        },
+        {
+          "name": "Test 4 - Instructor sees another instructor track details (Expected: 403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403 Forbidden\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Cross-instructor guard triggered\", function () {",
+                  "    pm.expect(jsonData.success).to.be.false;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{instructor_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tracks/3/students",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tracks", "3", "students"]
+            }
+          }
+        },
+        {
+          "name": "Test 5 - Student sees own enrollments (Expected: 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Returns list of student's own enrollments\", function () {",
+                  "    pm.expect(jsonData.success).to.be.true;",
+                  "    pm.expect(jsonData.data).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{student_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/student/my-enrollments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "student", "my-enrollments"]
+            }
+          }
+        },
+        {
+          "name": "Test 6 - Student tries another student profile (Expected: 403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403 Forbidden\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Cross-student profile isolation enforced\", function () {",
+                  "    pm.expect(jsonData.success).to.be.false;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{student_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/students/2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "2"]
+            }
+          }
+        },
+        {
+          "name": "Test 7 - Admin updates payment status (Expected: 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Admin successfully updated payment status\", function () {",
+                  "    pm.expect(jsonData.success).to.be.true;",
+                  "    pm.expect(jsonData.data.paymentStatus).to.eql(\"Completed\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Completed\",\n  \"notes\": \"Payment verified by Finance Admin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/payments/1/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "1", "status"]
+            }
+          }
+        },
+        {
+          "name": "Test 8 - Student updates payment status (Expected: 403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403 Forbidden\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{student_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Completed\",\n  \"notes\": \"Student trying to approve their own payment\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/payments/1/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "1", "status"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:5299",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "instructor_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "student_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

@@ -55,19 +55,37 @@ techmaster-aspnet-backend-training/
 ├── phase-02-web-api-basics/
 ├── phase-03-real-backend-data-systems/
 └── phase-04-secure-professional-backend/
-    ├── README.md                                  <-- You are here
-    ├── task-00-sprint-setup/                      <-- Baseline analysis & setup
-    ├── task-01-auth-foundation/                   <-- Register, Login, Password Hash, JWT
-    ├── task-02-role-stories-access-control/       <-- Admin / Instructor / Student RBAC
-    ├── task-03-secure-platform-upgrade/           <-- Upgrading Phase 03 endpoints
-    ├── task-04-professional-architecture-refactor/<-- Clean architecture, Result pattern
-    ├── task-05-validation-errors-logging/         <-- Validation, Middleware, Structured Logs
-    ├── task-06-production-redeployment/           <-- Remote DB, Live Swagger & Hosting
-    ├── task-07-audit-activity-timeline/           <-- Audit trail & Activity timeline
-    ├── task-08-bad-auth-refactor-pack/            <-- Fixing vulnerable legacy auth code
-    └── task-09-demo-linkedin-showcase/            <-- Video demo, Postman, LinkedIn post
+    ├── README.md                                  <-- Master Phase 04 Overview
+    ├── task-00-sprint-setup/                      <-- ✅ Task 00: Sprint Setup & Baseline Audit
+    ├── task-01-auth-foundation/                   <-- ✅ Task 01: Authentication Foundation & JWT
+    ├── task-02-role-stories-access-control/       <-- ✅ Task 02: Role Stories & Access Control
+    ├── task-03-secure-platform-upgrade/           <-- ⏳ Task 03: Secure Platform Upgrade
+    ├── task-04-professional-architecture-refactor/<-- ⏳ Task 04: Architecture & Result Pattern
+    ├── task-05-validation-errors-logging/         <-- ⏳ Task 05: Validation, Middleware & Logs
+    ├── task-06-production-redeployment/           <-- ⏳ Task 06: Production Redeployment
+    ├── task-07-audit-activity-timeline/           <-- ⏳ Task 07: Audit Trail & Timeline
+    ├── task-08-bad-auth-refactor-pack/            <-- ⏳ Task 08: Vulnerable Code Refactor Pack
+    └── task-09-demo-linkedin-showcase/            <-- ⏳ Task 09: Video Demo & LinkedIn Showcase
 ```
 
+---
+
+## 📋 15-Day Sprint Task Roadmap
+
+| Task | Module / Deliverable | Status | Core Highlights |
+| :---: | :--- | :---: | :--- |
+| **00** | [Sprint Setup & Baseline Audit](task-00-sprint-setup/) | ✅ **Done** | Phase 03 baseline setup, directory scaffolding, architecture review. |
+| **01** | [Authentication Foundation](task-01-auth-foundation/) | ✅ **Done** | User entity, PBKDF2 hashing, JWT access tokens, refresh tokens, `/api/auth/me`. |
+| **02** | [Role Stories & Access Control](task-02-role-stories-access-control/) | ✅ **Done** | RBAC matrix, Admin/Instructor/Student workflows, IDOR defense, Postman tests. |
+| **03** | [Secure Platform Upgrade](task-03-secure-platform-upgrade/) | ⏳ *Next* | Securing Phase 03 controllers, enrollment business rules, transactional safety. |
+| **04** | [Professional Architecture Refactor](task-04-professional-architecture-refactor/) | ⏳ *Queued* | Domain separation, Service Layer, Result Pattern (`Result<T>`). |
+| **05** | [Validation, Errors & Logging](task-05-validation-errors-logging/) | ⏳ *Queued* | FluentValidation, Global Exception Middleware, Serilog structured logs. |
+| **06** | [Production Redeployment](task-06-production-redeployment/) | ⏳ *Queued* | Cloud SQL Server, Render / MonsterASP hosting, healthchecks. |
+| **07** | [Audit Trail & Activity Timeline](task-07-audit-activity-timeline/) | ⏳ *Queued* | State change tracking, UTC audit interceptors, timeline query endpoint. |
+| **08** | [Bad Auth Refactor Pack](task-08-bad-auth-refactor-pack/) | ⏳ *Queued* | Security auditing, fixing 5 critical legacy authentication flaws. |
+| **09** | [LinkedIn Showcase & Demo Video](task-09-demo-linkedin-showcase/) | ⏳ *Queued* | Postman runner evidence, video recording, portfolio article. |
+
+---
 
 ## 🗺️ Feature Map
 
