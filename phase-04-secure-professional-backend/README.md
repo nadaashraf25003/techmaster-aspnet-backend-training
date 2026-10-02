@@ -59,8 +59,8 @@ techmaster-aspnet-backend-training/
     ├── task-00-sprint-setup/                      <-- ✅ Task 00: Sprint Setup & Baseline Audit
     ├── task-01-auth-foundation/                   <-- ✅ Task 01: Authentication Foundation & JWT
     ├── task-02-role-stories-access-control/       <-- ✅ Task 02: Role Stories & Access Control
-    ├── task-03-secure-platform-upgrade/           <-- ⏳ Task 03: Secure Platform Upgrade
-    ├── task-04-professional-architecture-refactor/<-- ⏳ Task 04: Architecture & Result Pattern
+    ├── task-03-secure-platform-upgrade/           <-- ✅ Task 03: Secure Platform Upgrade
+    ├── task-04-professional-architecture-refactor/<-- ✅ Task 04: Architecture & Result Pattern
     ├── task-05-validation-errors-logging/         <-- ⏳ Task 05: Validation, Middleware & Logs
     ├── task-06-production-redeployment/           <-- ⏳ Task 06: Production Redeployment
     ├── task-07-audit-activity-timeline/           <-- ⏳ Task 07: Audit Trail & Timeline
@@ -77,9 +77,9 @@ techmaster-aspnet-backend-training/
 | **00** | [Sprint Setup & Baseline Audit](task-00-sprint-setup/) | ✅ **Done** | Phase 03 baseline setup, directory scaffolding, architecture review. |
 | **01** | [Authentication Foundation](task-01-auth-foundation/) | ✅ **Done** | User entity, PBKDF2 hashing, JWT access tokens, refresh tokens, `/api/auth/me`. |
 | **02** | [Role Stories & Access Control](task-02-role-stories-access-control/) | ✅ **Done** | RBAC matrix, Admin/Instructor/Student workflows, IDOR defense, Postman tests. |
-| **03** | [Secure Platform Upgrade](task-03-secure-platform-upgrade/) | ⏳ *Next* | Securing Phase 03 controllers, enrollment business rules, transactional safety. |
-| **04** | [Professional Architecture Refactor](task-04-professional-architecture-refactor/) | ⏳ *Queued* | Domain separation, Service Layer, Result Pattern (`Result<T>`). |
-| **05** | [Validation, Errors & Logging](task-05-validation-errors-logging/) | ⏳ *Queued* | FluentValidation, Global Exception Middleware, Serilog structured logs. |
+| **03** | [Secure Platform Upgrade](task-03-secure-platform-upgrade/) | ✅ **Done** | Track sessions, instructor progress reports, student self-service enrollment. |
+| **04** | [Professional Architecture Refactor](task-04-professional-architecture-refactor/) | ✅ **Done** | Clean layered architecture, Result pattern, unified response envelope, middleware. |
+| **05** | [Validation, Errors & Logging](task-05-validation-errors-logging/) | ⏳ *Next* | FluentValidation, Global Exception Middleware, Serilog structured logs. |
 | **06** | [Production Redeployment](task-06-production-redeployment/) | ⏳ *Queued* | Cloud SQL Server, Render / MonsterASP hosting, healthchecks. |
 | **07** | [Audit Trail & Activity Timeline](task-07-audit-activity-timeline/) | ⏳ *Queued* | State change tracking, UTC audit interceptors, timeline query endpoint. |
 | **08** | [Bad Auth Refactor Pack](task-08-bad-auth-refactor-pack/) | ⏳ *Queued* | Security auditing, fixing 5 critical legacy authentication flaws. |
