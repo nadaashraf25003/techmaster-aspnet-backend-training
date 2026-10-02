@@ -79,8 +79,8 @@ techmaster-aspnet-backend-training/
 | **02** | [Role Stories & Access Control](task-02-role-stories-access-control/) | ✅ **Done** | RBAC matrix, Admin/Instructor/Student workflows, IDOR defense, Postman tests. |
 | **03** | [Secure Platform Upgrade](task-03-secure-platform-upgrade/) | ✅ **Done** | Track sessions, instructor progress reports, student self-service enrollment. |
 | **04** | [Professional Architecture Refactor](task-04-professional-architecture-refactor/) | ✅ **Done** | Clean layered architecture, Result pattern, unified response envelope, middleware. |
-| **05** | [Validation, Errors & Logging](task-05-validation-errors-logging/) | ⏳ *Next* | FluentValidation, Global Exception Middleware, Serilog structured logs. |
-| **06** | [Production Redeployment](task-06-production-redeployment/) | ⏳ *Queued* | Cloud SQL Server, Render / MonsterASP hosting, healthchecks. |
+| **05** | [Validation, Errors & Logging](task-05-validation-errors-logging/) | ✅ **Done** | 24 Rule Bank, Global Exception Middleware, Safe Error Masking, Structured Audit Logs. |
+| **06** | [Production Redeployment](task-06-production-redeployment/) | ⏳ *Next* | Cloud SQL Server, Render / MonsterASP hosting, healthchecks. |
 | **07** | [Audit Trail & Activity Timeline](task-07-audit-activity-timeline/) | ⏳ *Queued* | State change tracking, UTC audit interceptors, timeline query endpoint. |
 | **08** | [Bad Auth Refactor Pack](task-08-bad-auth-refactor-pack/) | ⏳ *Queued* | Security auditing, fixing 5 critical legacy authentication flaws. |
 | **09** | [LinkedIn Showcase & Demo Video](task-09-demo-linkedin-showcase/) | ⏳ *Queued* | Postman runner evidence, video recording, portfolio article. |
