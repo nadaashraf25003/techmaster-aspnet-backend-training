@@ -1,0 +1,410 @@
+using Microsoft.EntityFrameworkCore;
+using TrainingCenter.Api.Common;
+using TrainingCenter.Api.Common.Exceptions;
+using TrainingCenter.Api.Data;
+using TrainingCenter.Api.DTOs.Common;
+using TrainingCenter.Api.DTOs.Students;
+using TrainingCenter.Api.DTOs.Tracks;
+using TrainingCenter.Api.Entities;
+using TrainingCenter.Api.Services.Interfaces;
+
+namespace TrainingCenter.Api.Services.Implementations;
+
+public class TrackService : ITrackService
+{
+    private readonly TrainingCenterDbContext _context;
+
+    public TrackService(TrainingCenterDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<PagedResult<TrackResponse>> GetTracksAsync(TrackFilterParams filters)
+    {
+        var query = _context.TrainingTracks
+            .AsNoTracking()
+            .Include(t => t.PrimaryInstructor)
+            .Include(t => t.Enrollments)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(filters.Search))
+        {
+            var search = filters.Search.Trim().ToLower();
+            query = query.Where(t => t.Title.ToLower().Contains(search) || t.Code.ToLower().Contains(search));
+        }
+
+        if (filters.Status.HasValue)
+        {
+            query = query.Where(t => t.Status == filters.Status.Value);
+        }
+
+        if (filters.InstructorId.HasValue)
+        {
+            query = query.Where(t => t.PrimaryInstructorId == filters.InstructorId.Value);
+        }
+
+        if (filters.MinPrice.HasValue)
+        {
+            query = query.Where(t => t.Price >= filters.MinPrice.Value);
+        }
+
+        if (filters.MaxPrice.HasValue)
+        {
+            query = query.Where(t => t.Price <= filters.MaxPrice.Value);
+        }
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderBy(t => t.Title)
+            .Skip((filters.PageNumber - 1) * filters.PageSize)
+            .Take(filters.PageSize)
+            .Select(t => new TrackResponse
+            {
+                TrainingTrackId = t.TrainingTrackId,
+                Title = t.Title,
+                Code = t.Code,
+                Description = t.Description,
+                Price = t.Price,
+                DurationHours = t.DurationHours,
+                Capacity = t.Capacity,
+                Status = t.Status,
+                StartDate = t.StartDate,
+                EndDate = t.EndDate,
+                PrimaryInstructorId = t.PrimaryInstructorId,
+                InstructorName = t.PrimaryInstructor != null ? t.PrimaryInstructor.FullName : null,
+                ActiveEnrollmentsCount = t.Enrollments.Count(e => e.Status == Common.EnrollmentStatus.Active),
+                CreatedAt = t.CreatedAt
+            })
+            .ToListAsync();
+
+        return new PagedResult<TrackResponse>(items, totalCount, filters.PageNumber, filters.PageSize);
+    }
+
+    public async Task<TrackResponse> GetTrackByIdAsync(int id)
+    {
+        var track = await _context.TrainingTracks
+            .AsNoTracking()
+            .Include(t => t.PrimaryInstructor)
+            .Include(t => t.Enrollments)
+            .FirstOrDefaultAsync(t => t.TrainingTrackId == id);
+
+        if (track == null)
+        {
+            throw new NotFoundException($"Training Track with ID {id} was not found.");
+        }
+
+        return new TrackResponse
+        {
+            TrainingTrackId = track.TrainingTrackId,
+            Title = track.Title,
+            Code = track.Code,
+            Description = track.Description,
+            Price = track.Price,
+            DurationHours = track.DurationHours,
+            Capacity = track.Capacity,
+            Status = track.Status,
+            StartDate = track.StartDate,
+            EndDate = track.EndDate,
+            PrimaryInstructorId = track.PrimaryInstructorId,
+            InstructorName = track.PrimaryInstructor != null ? track.PrimaryInstructor.FullName : null,
+            ActiveEnrollmentsCount = track.Enrollments.Count(e => e.Status == Common.EnrollmentStatus.Active),
+            CreatedAt = track.CreatedAt
+        };
+    }
+
+    public async Task<TrackResponse> CreateTrackAsync(CreateTrackRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Title))
+        {
+            throw new BadRequestException("Track Title is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Code))
+        {
+            throw new BadRequestException("Track Code is required.");
+        }
+
+        var codeNormalized = request.Code.Trim().ToUpperInvariant();
+        var codeExists = await _context.TrainingTracks.AnyAsync(t => t.Code.ToUpper() == codeNormalized);
+        if (codeExists)
+        {
+            throw new BadRequestException($"Track with code '{request.Code}' already exists. Track Code must be unique.");
+        }
+
+        if (request.Capacity <= 0)
+        {
+            throw new BadRequestException("Track Capacity must be strictly greater than 0.");
+        }
+
+        if (request.StartDate >= request.EndDate)
+        {
+            throw new BadRequestException($"Invalid track dates: StartDate ({request.StartDate:yyyy-MM-dd}) must be before EndDate ({request.EndDate:yyyy-MM-dd}).");
+        }
+
+        if (!request.PrimaryInstructorId.HasValue || request.PrimaryInstructorId.Value <= 0)
+        {
+            throw new BadRequestException("Primary Instructor is required.");
+        }
+
+        var instructor = await _context.Instructors
+            .FirstOrDefaultAsync(i => i.InstructorId == request.PrimaryInstructorId.Value);
+
+        if (instructor == null)
+        {
+            throw new BadRequestException($"Instructor with ID {request.PrimaryInstructorId.Value} was not found.");
+        }
+
+        if (!instructor.IsActive)
+        {
+            throw new BadRequestException($"Cannot assign instructor '{instructor.FullName}' because their account is inactive.");
+        }
+
+        var track = new TrainingTrack
+        {
+            Title = request.Title.Trim(),
+            Code = codeNormalized,
+            Description = request.Description?.Trim() ?? string.Empty,
+            Price = request.Price,
+            DurationHours = request.DurationHours,
+            Capacity = request.Capacity,
+            Status = request.Status,
+            StartDate = request.StartDate,
+            EndDate = request.EndDate,
+            PrimaryInstructorId = request.PrimaryInstructorId
+        };
+
+        _context.TrainingTracks.Add(track);
+        await _context.SaveChangesAsync();
+
+        return await GetTrackByIdAsync(track.TrainingTrackId);
+    }
+
+    public async Task<TrackResponse> UpdateTrackAsync(int id, UpdateTrackRequest request)
+    {
+        var track = await _context.TrainingTracks.FirstOrDefaultAsync(t => t.TrainingTrackId == id);
+        if (track == null)
+        {
+            throw new NotFoundException($"Training Track with ID {id} was not found.");
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Title))
+        {
+            throw new BadRequestException("Track Title is required.");
+        }
+
+        if (request.Capacity <= 0)
+        {
+            throw new BadRequestException("Track Capacity must be strictly greater than 0.");
+        }
+
+        if (request.StartDate >= request.EndDate)
+        {
+            throw new BadRequestException($"Invalid track dates: StartDate ({request.StartDate:yyyy-MM-dd}) must be before EndDate ({request.EndDate:yyyy-MM-dd}).");
+        }
+
+        if (!request.PrimaryInstructorId.HasValue || request.PrimaryInstructorId.Value <= 0)
+        {
+            throw new BadRequestException("Primary Instructor is required.");
+        }
+
+        var instructor = await _context.Instructors
+            .FirstOrDefaultAsync(i => i.InstructorId == request.PrimaryInstructorId.Value);
+
+        if (instructor == null)
+        {
+            throw new BadRequestException($"Instructor with ID {request.PrimaryInstructorId.Value} was not found.");
+        }
+
+        if (!instructor.IsActive)
+        {
+            throw new BadRequestException($"Cannot assign instructor '{instructor.FullName}' because their account is inactive.");
+        }
+
+        track.Title = request.Title.Trim();
+        track.Description = request.Description?.Trim() ?? string.Empty;
+        track.Price = request.Price;
+        track.DurationHours = request.DurationHours;
+        track.Capacity = request.Capacity;
+        track.Status = request.Status;
+        track.StartDate = request.StartDate;
+        track.EndDate = request.EndDate;
+        track.PrimaryInstructorId = request.PrimaryInstructorId;
+
+        await _context.SaveChangesAsync();
+        return await GetTrackByIdAsync(id);
+    }
+
+    public async Task DeleteTrackAsync(int id)
+    {
+        var track = await _context.TrainingTracks.FirstOrDefaultAsync(t => t.TrainingTrackId == id);
+        if (track == null)
+        {
+            throw new NotFoundException($"Training Track with ID {id} was not found.");
+        }
+
+        track.IsDeleted = true;
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<StudentResponse>> GetEnrolledStudentsForTrackAsync(int trackId, int? requestingInstructorId, bool isAdmin)
+    {
+        var track = await _context.TrainingTracks
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.TrainingTrackId == trackId && !t.IsDeleted);
+
+        if (track == null)
+        {
+            throw new NotFoundException($"Training Track with ID {trackId} was not found.");
+        }
+
+        if (!isAdmin)
+        {
+            if (!requestingInstructorId.HasValue || track.PrimaryInstructorId != requestingInstructorId.Value)
+            {
+                throw new ForbiddenException("Access denied. You can only view enrolled students for tracks assigned to you.");
+            }
+        }
+
+        var students = await _context.Enrollments
+            .AsNoTracking()
+            .Where(e => e.TrainingTrackId == trackId && !e.IsDeleted && e.Student != null && !e.Student.IsDeleted)
+            .Select(e => e.Student!)
+            .Distinct()
+            .OrderBy(s => s.FullName)
+            .Select(s => new StudentResponse
+            {
+                StudentId = s.StudentId,
+                FullName = s.FullName,
+                Email = s.Email,
+                PhoneNumber = s.PhoneNumber,
+                DateOfBirth = s.DateOfBirth,
+                Address = s.Address,
+                IsActive = s.IsActive,
+                EnrollmentsCount = s.Enrollments.Count(e => e.Status != Common.EnrollmentStatus.Cancelled),
+                CreatedAt = s.CreatedAt
+            })
+            .ToListAsync();
+
+        return students;
+    }
+
+    public async Task<List<TrackResponse>> GetAvailableTracksAsync()
+    {
+        var tracks = await _context.TrainingTracks
+            .AsNoTracking()
+            .Include(t => t.PrimaryInstructor)
+            .Include(t => t.Enrollments)
+            .Where(t => !t.IsDeleted && (t.Status == TrackStatus.Upcoming || t.Status == TrackStatus.InProgress))
+            .OrderBy(t => t.StartDate)
+            .Select(t => new TrackResponse
+            {
+                TrainingTrackId = t.TrainingTrackId,
+                Title = t.Title,
+                Code = t.Code,
+                Description = t.Description,
+                Price = t.Price,
+                DurationHours = t.DurationHours,
+                Capacity = t.Capacity,
+                Status = t.Status,
+                StartDate = t.StartDate,
+                EndDate = t.EndDate,
+                PrimaryInstructorId = t.PrimaryInstructorId,
+                InstructorName = t.PrimaryInstructor != null ? t.PrimaryInstructor.FullName : null,
+                ActiveEnrollmentsCount = t.Enrollments.Count(e => e.Status == Common.EnrollmentStatus.Active),
+                CreatedAt = t.CreatedAt
+            })
+            .ToListAsync();
+
+        // Filter for tracks that have available seats
+        return tracks.Where(t => t.AvailableSeats > 0).ToList();
+    }
+
+    public async Task<TrackResponse> AssignInstructorAsync(int trackId, int instructorId)
+    {
+        var track = await _context.TrainingTracks.FirstOrDefaultAsync(t => t.TrainingTrackId == trackId && !t.IsDeleted);
+        if (track == null)
+        {
+            throw new NotFoundException($"Training Track with ID {trackId} was not found.");
+        }
+
+        var instructor = await _context.Instructors.FirstOrDefaultAsync(i => i.InstructorId == instructorId && !i.IsDeleted);
+        if (instructor == null)
+        {
+            throw new NotFoundException($"Instructor with ID {instructorId} was not found.");
+        }
+
+        if (!instructor.IsActive)
+        {
+            throw new BadRequestException($"Cannot assign instructor '{instructor.FullName}' because their account is inactive.");
+        }
+
+        track.PrimaryInstructorId = instructorId;
+        await _context.SaveChangesAsync();
+
+        return await GetTrackByIdAsync(trackId);
+    }
+
+    public async Task<TrackProgressReportResponse> GetTrackProgressReportAsync(int trackId, int? requestingInstructorId, bool isAdmin)
+    {
+        var track = await _context.TrainingTracks
+            .AsNoTracking()
+            .Include(t => t.PrimaryInstructor)
+            .Include(t => t.Enrollments)
+            .FirstOrDefaultAsync(t => t.TrainingTrackId == trackId && !t.IsDeleted);
+
+        if (track == null)
+        {
+            throw new NotFoundException($"Training Track with ID {trackId} was not found.");
+        }
+
+        if (!isAdmin)
+        {
+            if (!requestingInstructorId.HasValue || track.PrimaryInstructorId != requestingInstructorId.Value)
+            {
+                throw new ForbiddenException("Access denied. You can only view progress reports for tracks assigned to you.");
+            }
+        }
+
+        var sessions = await _context.TrackSessions
+            .AsNoTracking()
+            .Include(s => s.CreatedByInstructor)
+            .Where(s => s.TrainingTrackId == trackId && !s.IsDeleted)
+            .OrderBy(s => s.SessionDate)
+            .Select(s => new TrainingCenter.Api.DTOs.Sessions.TrackSessionResponse
+            {
+                TrackSessionId = s.TrackSessionId,
+                TrainingTrackId = s.TrainingTrackId,
+                TrackTitle = track.Title,
+                SessionDate = s.SessionDate,
+                Title = s.Title,
+                Description = s.Description,
+                MeetingLink = s.MeetingLink,
+                IsCompleted = s.IsCompleted,
+                Notes = s.Notes,
+                CreatedByInstructorId = s.CreatedByInstructorId,
+                CreatedByInstructorName = s.CreatedByInstructor != null ? s.CreatedByInstructor.FullName : string.Empty,
+                CreatedAt = s.CreatedAt
+            })
+            .ToListAsync();
+
+        var enrolledCount = track.Enrollments.Count(e => e.Status == EnrollmentStatus.Active || e.Status == EnrollmentStatus.Completed);
+        var totalSessions = sessions.Count;
+        var completedSessions = sessions.Count(s => s.IsCompleted);
+
+        return new TrackProgressReportResponse
+        {
+            TrainingTrackId = track.TrainingTrackId,
+            Title = track.Title,
+            Code = track.Code,
+            PrimaryInstructorId = track.PrimaryInstructorId,
+            InstructorName = track.PrimaryInstructor != null ? track.PrimaryInstructor.FullName : null,
+            TotalSessions = totalSessions,
+            CompletedSessions = completedSessions,
+            EnrolledStudentsCount = enrolledCount,
+            Capacity = track.Capacity,
+            Status = track.Status,
+            Sessions = sessions
+        };
+    }
+}
