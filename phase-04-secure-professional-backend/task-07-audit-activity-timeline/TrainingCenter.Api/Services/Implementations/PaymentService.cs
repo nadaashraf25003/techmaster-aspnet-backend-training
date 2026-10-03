@@ -1,0 +1,270 @@
+using Microsoft.EntityFrameworkCore;
+using TrainingCenter.Api.Common;
+using TrainingCenter.Api.Common.Exceptions;
+using TrainingCenter.Api.Data;
+using TrainingCenter.Api.DTOs.Common;
+using TrainingCenter.Api.DTOs.Payments;
+using TrainingCenter.Api.Entities;
+using TrainingCenter.Api.Services.Interfaces;
+
+namespace TrainingCenter.Api.Services.Implementations;
+
+public class PaymentService : IPaymentService
+{
+    private readonly TrainingCenterDbContext _context;
+    private readonly IAuditService _auditService;
+    private readonly ILogger<PaymentService> _logger;
+
+    public PaymentService(
+        TrainingCenterDbContext context,
+        IAuditService auditService,
+        ILogger<PaymentService> logger)
+    {
+        _context = context;
+        _auditService = auditService;
+        _logger = logger;
+    }
+
+    public async Task<PagedResult<PaymentResponse>> GetPaymentsAsync(PaymentFilterParams filters)
+    {
+        if (!filters.IsDateRangeValid)
+        {
+            throw new BadRequestException("Invalid date range: 'from' date must be less than or equal to 'to' date.");
+        }
+
+        var query = _context.Payments
+            .AsNoTracking()
+            .Include(p => p.Enrollment)
+                .ThenInclude(e => e!.Student)
+            .Include(p => p.Enrollment)
+                .ThenInclude(e => e!.TrainingTrack)
+            .AsQueryable();
+
+        if (filters.From.HasValue)
+        {
+            var fromDate = filters.From.Value.Date;
+            query = query.Where(p => p.PaymentDate >= fromDate);
+        }
+
+        if (filters.To.HasValue)
+        {
+            var toDate = filters.To.Value.Date.AddDays(1).AddTicks(-1);
+            query = query.Where(p => p.PaymentDate <= toDate);
+        }
+
+        if (filters.Status.HasValue)
+        {
+            query = query.Where(p => p.PaymentStatus == filters.Status.Value);
+        }
+
+        if (filters.Method.HasValue)
+        {
+            query = query.Where(p => p.PaymentMethod == filters.Method.Value);
+        }
+
+        if (filters.EnrollmentId.HasValue)
+        {
+            query = query.Where(p => p.EnrollmentId == filters.EnrollmentId.Value);
+        }
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderByDescending(p => p.PaymentDate)
+            .Skip((filters.PageNumber - 1) * filters.PageSize)
+            .Take(filters.PageSize)
+            .Select(p => new PaymentResponse
+            {
+                PaymentId = p.PaymentId,
+                EnrollmentId = p.EnrollmentId,
+                StudentName = p.Enrollment != null && p.Enrollment.Student != null ? p.Enrollment.Student.FullName : string.Empty,
+                TrackTitle = p.Enrollment != null && p.Enrollment.TrainingTrack != null ? p.Enrollment.TrainingTrack.Title : string.Empty,
+                Amount = p.Amount,
+                PaymentMethod = p.PaymentMethod,
+                PaymentDate = p.PaymentDate,
+                PaymentStatus = p.PaymentStatus,
+                ReferenceNumber = p.ReferenceNumber,
+                Notes = p.Notes,
+                CreatedAt = p.CreatedAt
+            })
+            .ToListAsync();
+
+        return new PagedResult<PaymentResponse>(items, totalCount, filters.PageNumber, filters.PageSize);
+    }
+
+    public async Task<PaymentResponse> GetPaymentByIdAsync(int id)
+    {
+        var payment = await _context.Payments
+            .AsNoTracking()
+            .Include(p => p.Enrollment)
+                .ThenInclude(e => e!.Student)
+            .Include(p => p.Enrollment)
+                .ThenInclude(e => e!.TrainingTrack)
+            .FirstOrDefaultAsync(p => p.PaymentId == id);
+
+        if (payment == null)
+        {
+            throw new NotFoundException($"Payment with ID {id} was not found.");
+        }
+
+        return new PaymentResponse
+        {
+            PaymentId = payment.PaymentId,
+            EnrollmentId = payment.EnrollmentId,
+            StudentName = payment.Enrollment?.Student?.FullName ?? string.Empty,
+            TrackTitle = payment.Enrollment?.TrainingTrack?.Title ?? string.Empty,
+            Amount = payment.Amount,
+            PaymentMethod = payment.PaymentMethod,
+            PaymentDate = payment.PaymentDate,
+            PaymentStatus = payment.PaymentStatus,
+            ReferenceNumber = payment.ReferenceNumber,
+            Notes = payment.Notes,
+            CreatedAt = payment.CreatedAt
+        };
+    }
+
+    public async Task<PaymentResponse> CreatePaymentAsync(CreatePaymentRequest request)
+    {
+        if (request.Amount <= 0)
+        {
+            throw new BadRequestException("Payment amount must be greater than 0.");
+        }
+
+        var enrollment = await _context.Enrollments
+            .Include(e => e.Student)
+            .Include(e => e.TrainingTrack)
+            .Include(e => e.Payments)
+            .FirstOrDefaultAsync(e => e.EnrollmentId == request.EnrollmentId);
+
+        if (enrollment == null)
+        {
+            throw new BadRequestException($"Enrollment with ID {request.EnrollmentId} was not found.");
+        }
+
+        if (enrollment.Status == EnrollmentStatus.Cancelled)
+        {
+            throw new BadRequestException("Cannot add payment for a cancelled enrollment.");
+        }
+
+        var trackPrice = enrollment.TrainingTrack?.Price ?? 0.00m;
+        var totalAlreadyPaid = enrollment.Payments
+            .Where(p => p.PaymentStatus == PaymentStatus.Completed)
+            .Sum(p => p.Amount);
+
+        var remainingBalance = trackPrice - totalAlreadyPaid;
+
+        if (request.Amount > remainingBalance)
+        {
+            throw new BadRequestException(
+                $"Payment amount of {request.Amount:N2} EGP exceeds remaining outstanding balance of {remainingBalance:N2} EGP.",
+                new List<string> { $"Maximum allowable payment for this enrollment is {remainingBalance:N2} EGP." });
+        }
+
+        var refNum = string.IsNullOrWhiteSpace(request.ReferenceNumber)
+            ? $"PAY-{DateTime.UtcNow:yyyyMMdd}-{Guid.NewGuid().ToString("N")[..6].ToUpper()}"
+            : request.ReferenceNumber;
+
+        var existsRef = await _context.Payments.AnyAsync(p => p.ReferenceNumber == refNum);
+        if (existsRef)
+        {
+            throw new ConflictException($"A payment with reference number '{refNum}' already exists.");
+        }
+
+        var payment = new Payment
+        {
+            EnrollmentId = request.EnrollmentId,
+            Amount = request.Amount,
+            PaymentMethod = request.PaymentMethod,
+            PaymentDate = request.PaymentDate,
+            PaymentStatus = request.PaymentStatus,
+            ReferenceNumber = refNum,
+            Notes = request.Notes
+        };
+
+        await _context.Payments.AddAsync(payment);
+
+        if (request.PaymentStatus == PaymentStatus.Completed && enrollment.Status == EnrollmentStatus.Pending)
+        {
+            enrollment.Status = EnrollmentStatus.Active;
+            _logger.LogInformation("Enrollment {EnrollmentId} automatically activated upon completed payment {PaymentId}", enrollment.EnrollmentId, payment.PaymentId);
+        }
+
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation("Payment {PaymentId} of {Amount:N2} EGP recorded for Enrollment {EnrollmentId}. Status: {Status}, Reference: {RefNum}",
+            payment.PaymentId, payment.Amount, enrollment.EnrollmentId, payment.PaymentStatus, payment.ReferenceNumber);
+
+        await _auditService.LogAsync(
+            action: "PaymentCreated",
+            entityName: "Payment",
+            entityId: payment.PaymentId.ToString(),
+            description: $"Payment #{payment.PaymentId} of {payment.Amount:N2} EGP recorded for Enrollment #{payment.EnrollmentId} via {payment.PaymentMethod}.",
+            metadata: new
+            {
+                payment.PaymentId,
+                payment.EnrollmentId,
+                payment.Amount,
+                paymentMethod = payment.PaymentMethod.ToString(),
+                paymentStatus = payment.PaymentStatus.ToString(),
+                payment.ReferenceNumber,
+                studentId = enrollment.StudentId,
+                studentName = enrollment.Student?.FullName,
+                trackId = enrollment.TrainingTrackId,
+                trackTitle = enrollment.TrainingTrack?.Title
+            });
+
+        return await GetPaymentByIdAsync(payment.PaymentId);
+    }
+
+    public async Task<PaymentResponse> UpdatePaymentStatusAsync(int id, UpdatePaymentStatusRequest request)
+    {
+        var payment = await _context.Payments
+            .Include(p => p.Enrollment)
+            .FirstOrDefaultAsync(p => p.PaymentId == id);
+
+        if (payment == null)
+        {
+            throw new NotFoundException($"Payment with ID {id} was not found.");
+        }
+
+        if (!Enum.IsDefined(typeof(PaymentStatus), request.Status))
+        {
+            throw new BadRequestException($"Invalid payment status value '{request.Status}'.");
+        }
+
+        var oldStatus = payment.PaymentStatus;
+        payment.PaymentStatus = request.Status;
+        if (!string.IsNullOrWhiteSpace(request.Notes))
+        {
+            payment.Notes = request.Notes;
+        }
+
+        if (request.Status == PaymentStatus.Completed && payment.Enrollment != null && payment.Enrollment.Status == EnrollmentStatus.Pending)
+        {
+            payment.Enrollment.Status = EnrollmentStatus.Active;
+        }
+
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation("Payment {PaymentId} status transitioned from {OldStatus} to {NewStatus}",
+            id, oldStatus, request.Status);
+
+        await _auditService.LogAsync(
+            action: "PaymentStatusUpdated",
+            entityName: "Payment",
+            entityId: payment.PaymentId.ToString(),
+            description: $"Payment #{payment.PaymentId} status transitioned from {oldStatus} to {payment.PaymentStatus}.",
+            metadata: new
+            {
+                payment.PaymentId,
+                payment.EnrollmentId,
+                payment.Amount,
+                payment.ReferenceNumber,
+                previousStatus = oldStatus.ToString(),
+                newStatus = payment.PaymentStatus.ToString(),
+                notes = payment.Notes
+            });
+
+        return await GetPaymentByIdAsync(id);
+    }
+}

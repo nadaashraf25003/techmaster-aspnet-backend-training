@@ -1,0 +1,569 @@
+using Microsoft.EntityFrameworkCore;
+using TrainingCenter.Api.Common;
+using TrainingCenter.Api.Entities;
+using TrainingCenter.Api.Services.Implementations;
+
+namespace TrainingCenter.Api.Data;
+
+public static class DbInitializer
+{
+    public static async Task SeedAsync(TrainingCenterDbContext context)
+    {
+        var passwordHasher = new PasswordHasherService();
+
+        // 0. Seed Application Users
+        if (!await context.Users.AnyAsync())
+        {
+            var adminUser = new ApplicationUser
+            {
+                FullName = "TechMaster System Administrator",
+                Email = "admin@techmaster.com",
+                PasswordHash = passwordHasher.HashPassword("Admin@123456"),
+                Role = UserRole.Admin,
+                IsActive = true,
+                CreatedAtUtc = DateTime.UtcNow
+            };
+
+            var instructorUser = new ApplicationUser
+            {
+                FullName = "Eng. Mohamed Ali",
+                Email = "instructor@techmaster.com",
+                PasswordHash = passwordHasher.HashPassword("Instructor@123456"),
+                Role = UserRole.Instructor,
+                IsActive = true,
+                CreatedAtUtc = DateTime.UtcNow
+            };
+
+            var studentUser = new ApplicationUser
+            {
+                FullName = "Nada Ashraf",
+                Email = "student@techmaster.com",
+                PasswordHash = passwordHasher.HashPassword("Student@123456"),
+                Role = UserRole.Student,
+                IsActive = true,
+                CreatedAtUtc = DateTime.UtcNow
+            };
+
+            var inactiveUser = new ApplicationUser
+            {
+                FullName = "Deactivated Test Student",
+                Email = "inactive@techmaster.com",
+                PasswordHash = passwordHasher.HashPassword("Inactive@123456"),
+                Role = UserRole.Student,
+                IsActive = false,
+                CreatedAtUtc = DateTime.UtcNow
+            };
+
+            await context.Users.AddRangeAsync(adminUser, instructorUser, studentUser, inactiveUser);
+            await context.SaveChangesAsync();
+        }
+
+        if (await context.Students.AnyAsync())
+        {
+            // Ensure seeded users are linked to existing instructor and student profiles
+            var instUser = await context.Users.FirstOrDefaultAsync(u => u.Email == "instructor@techmaster.com");
+            if (instUser != null && !instUser.InstructorId.HasValue)
+            {
+                var firstInst = await context.Instructors.FirstOrDefaultAsync();
+                if (firstInst != null)
+                {
+                    instUser.InstructorId = firstInst.InstructorId;
+                }
+            }
+
+            var studUser = await context.Users.FirstOrDefaultAsync(u => u.Email == "student@techmaster.com");
+            if (studUser != null && !studUser.StudentId.HasValue)
+            {
+                var firstStud = await context.Students.FirstOrDefaultAsync();
+                if (firstStud != null)
+                {
+                    studUser.StudentId = firstStud.StudentId;
+                }
+            }
+
+            if (!await context.TrackSessions.AnyAsync())
+            {
+                var firstTrack = await context.TrainingTracks.FirstOrDefaultAsync();
+                var firstInstructor = await context.Instructors.FirstOrDefaultAsync();
+                if (firstTrack != null && firstInstructor != null)
+                {
+                    var newSessions = new List<TrackSession>
+                    {
+                        new TrackSession
+                        {
+                            TrainingTrackId = firstTrack.TrainingTrackId,
+                            CreatedByInstructorId = firstInstructor.InstructorId,
+                            Title = "Session 01: ASP.NET Core & Dependency Injection",
+                            Description = "Architecture overview, IoC container, Service lifetimes, and Middleware.",
+                            MeetingLink = "https://meet.google.com/abc-defg-hij",
+                            SessionDate = new DateTime(2026, 7, 5, 18, 0, 0, DateTimeKind.Utc),
+                            IsCompleted = true,
+                            Notes = "Covered Singleton, Scoped, and Transient lifetimes."
+                        },
+                        new TrackSession
+                        {
+                            TrainingTrackId = firstTrack.TrainingTrackId,
+                            CreatedByInstructorId = firstInstructor.InstructorId,
+                            Title = "Session 02: EF Core & Relational Modeling",
+                            Description = "Fluent API, navigation properties, migrations, and query optimization.",
+                            MeetingLink = "https://meet.google.com/abc-defg-hij",
+                            SessionDate = new DateTime(2026, 7, 8, 18, 0, 0, DateTimeKind.Utc),
+                            IsCompleted = true,
+                            Notes = "Reviewed 1-to-many and many-to-many relationships."
+                        },
+                        new TrackSession
+                        {
+                            TrainingTrackId = firstTrack.TrainingTrackId,
+                            CreatedByInstructorId = firstInstructor.InstructorId,
+                            Title = "Session 03: JWT Authentication & Security",
+                            Description = "Token generation, claims, role-based access control, and password hashing.",
+                            MeetingLink = "https://meet.google.com/abc-defg-hij",
+                            SessionDate = new DateTime(2026, 7, 12, 18, 0, 0, DateTimeKind.Utc),
+                            IsCompleted = false,
+                            Notes = "Upcoming session on identity architectures."
+                        }
+                    };
+                    await context.TrackSessions.AddRangeAsync(newSessions);
+                }
+            }
+
+            await context.SaveChangesAsync();
+            return;
+        }
+
+        // 1. Seed Instructors
+        var instructors = new List<Instructor>
+        {
+            new Instructor
+            {
+                FullName = "Eng. Mohamed Ali",
+                Email = "m.ali@techmaster.edu",
+                PhoneNumber = "+201011112222",
+                Specialization = ".NET Cloud & Enterprise Architecture",
+                HourlyRate = 650.00m,
+                IsActive = true
+            },
+            new Instructor
+            {
+                FullName = "Dr. Sara Hassan",
+                Email = "s.hassan@techmaster.edu",
+                PhoneNumber = "+201022223333",
+                Specialization = "AI & Machine Learning Engineering",
+                HourlyRate = 750.00m,
+                IsActive = true
+            },
+            new Instructor
+            {
+                FullName = "Eng. Inactive Instructor",
+                Email = "inactive.instructor@techmaster.edu",
+                PhoneNumber = "+201099998888",
+                Specialization = "Archived Subjects",
+                HourlyRate = 400.00m,
+                IsActive = false
+            }
+        };
+        await context.Instructors.AddRangeAsync(instructors);
+        await context.SaveChangesAsync();
+
+        // Link seeded instructor user to instructor profile
+        var seededInstructorUser = await context.Users.FirstOrDefaultAsync(u => u.Email == "instructor@techmaster.com");
+        if (seededInstructorUser != null)
+        {
+            seededInstructorUser.InstructorId = instructors[0].InstructorId;
+        }
+
+        // 2. Seed Training Tracks
+        var tracks = new List<TrainingTrack>
+        {
+            new TrainingTrack
+            {
+                Title = "ASP.NET Core Enterprise Backend BootCamp",
+                Code = "NET-BE-2026",
+                Description = "Comprehensive enterprise mastery of C#, EF Core, Clean Architecture, CQRS, and Microservices.",
+                Price = 8500.00m,
+                DurationHours = 120,
+                Capacity = 5,
+                Status = TrackStatus.InProgress,
+                StartDate = new DateTime(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc),
+                EndDate = new DateTime(2026, 9, 30, 0, 0, 0, DateTimeKind.Utc),
+                PrimaryInstructorId = instructors[0].InstructorId
+            },
+            new TrainingTrack
+            {
+                Title = "Full Stack Modern React & Next.js MasterClass",
+                Code = "REACT-FULL-2026",
+                Description = "Full stack modern application development using TypeScript, Next.js, and Node.js.",
+                Price = 5000.00m,
+                DurationHours = 100,
+                Capacity = 2,
+                Status = TrackStatus.InProgress,
+                StartDate = new DateTime(2026, 7, 5, 0, 0, 0, DateTimeKind.Utc),
+                EndDate = new DateTime(2026, 9, 25, 0, 0, 0, DateTimeKind.Utc),
+                PrimaryInstructorId = instructors[0].InstructorId
+            },
+            new TrainingTrack
+            {
+                Title = "Legacy Architecture & Monolith Refactoring",
+                Code = "ARCH-CLOSED-2026",
+                Description = "Strategies for strangler fig pattern and monolith decomposition.",
+                Price = 6000.00m,
+                DurationHours = 60,
+                Capacity = 15,
+                Status = TrackStatus.Closed,
+                StartDate = new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),
+                EndDate = new DateTime(2026, 6, 15, 0, 0, 0, DateTimeKind.Utc),
+                PrimaryInstructorId = instructors[1].InstructorId
+            },
+            new TrainingTrack
+            {
+                Title = "Advanced Applied Machine Learning & Deep Learning",
+                Code = "AI-ML-2026",
+                Description = "Practical AI engineering with PyTorch, Scikit-Learn, and MLOps pipelines.",
+                Price = 10500.00m,
+                DurationHours = 140,
+                Capacity = 20,
+                Status = TrackStatus.Upcoming,
+                StartDate = new DateTime(2026, 8, 1, 0, 0, 0, DateTimeKind.Utc),
+                EndDate = new DateTime(2026, 11, 1, 0, 0, 0, DateTimeKind.Utc),
+                PrimaryInstructorId = instructors[1].InstructorId
+            }
+        };
+        await context.TrainingTracks.AddRangeAsync(tracks);
+        await context.SaveChangesAsync();
+
+        // 3. Seed Students
+        var students = new List<Student>
+        {
+            new Student
+            {
+                FullName = "Nada Ashraf",
+                Email = "nada.ashraf@gmail.com",
+                PhoneNumber = "+201100001111",
+                DateOfBirth = new DateTime(2002, 5, 14, 0, 0, 0, DateTimeKind.Utc),
+                Address = "Nasr City, Cairo",
+                IsActive = true
+            },
+            new Student
+            {
+                FullName = "Ahmed Mansour",
+                Email = "ahmed.mansour@yahoo.com",
+                PhoneNumber = "+201100002222",
+                DateOfBirth = new DateTime(1999, 11, 23, 0, 0, 0, DateTimeKind.Utc),
+                Address = "Dokki, Giza",
+                IsActive = true
+            },
+            new Student
+            {
+                FullName = "Salma Ibrahim",
+                Email = "salma.ibrahim@outlook.com",
+                PhoneNumber = "+201100003333",
+                DateOfBirth = new DateTime(2001, 8, 19, 0, 0, 0, DateTimeKind.Utc),
+                Address = "Maadi, Cairo",
+                IsActive = true
+            },
+            new Student
+            {
+                FullName = "Omar Farouk",
+                Email = "omar.farouk@techmail.com",
+                PhoneNumber = "+201100004444",
+                DateOfBirth = new DateTime(2000, 3, 30, 0, 0, 0, DateTimeKind.Utc),
+                Address = "Alexandria",
+                IsActive = true
+            },
+            new Student
+            {
+                FullName = "Tarek Inactive Student",
+                Email = "tarek.inactive@techmail.com",
+                PhoneNumber = "+201100005555",
+                DateOfBirth = new DateTime(1998, 4, 12, 0, 0, 0, DateTimeKind.Utc),
+                Address = "Giza",
+                IsActive = false
+            },
+            new Student
+            {
+                FullName = "Khaled Mostafa",
+                Email = "khaled.mostafa@techmail.com",
+                PhoneNumber = "+201100006666",
+                DateOfBirth = new DateTime(1998, 7, 8, 0, 0, 0, DateTimeKind.Utc),
+                Address = "Heliopolis, Cairo",
+                IsActive = true
+            },
+            new Student
+            {
+                FullName = "Mariam Samir",
+                Email = "mariam.samir@gmail.com",
+                PhoneNumber = "+201100007777",
+                DateOfBirth = new DateTime(2001, 4, 25, 0, 0, 0, DateTimeKind.Utc),
+                Address = "Mohandessin, Giza",
+                IsActive = true
+            }
+        };
+        await context.Students.AddRangeAsync(students);
+        await context.SaveChangesAsync();
+
+        // Link seeded student user to student profile
+        var seededStudentUser = await context.Users.FirstOrDefaultAsync(u => u.Email == "student@techmaster.com");
+        if (seededStudentUser != null)
+        {
+            seededStudentUser.StudentId = students[0].StudentId;
+        }
+
+        // 4. Seed Enrollments
+        var enrollments = new List<Enrollment>
+        {
+            new Enrollment
+            {
+                StudentId = students[0].StudentId,
+                TrainingTrackId = tracks[0].TrainingTrackId,
+                EnrollmentDate = new DateTime(2026, 7, 2, 9, 0, 0, DateTimeKind.Utc),
+                Status = EnrollmentStatus.Active,
+                ProgressPercentage = 65.00m,
+                Notes = "Full tuition payment completed."
+            },
+            new Enrollment
+            {
+                StudentId = students[1].StudentId,
+                TrainingTrackId = tracks[0].TrainingTrackId,
+                EnrollmentDate = new DateTime(2026, 7, 3, 10, 30, 0, DateTimeKind.Utc),
+                Status = EnrollmentStatus.Active,
+                ProgressPercentage = 50.00m,
+                Notes = "First installment paid 5,000 EGP. Remaining = 3,500 EGP."
+            },
+            new Enrollment
+            {
+                StudentId = students[2].StudentId,
+                TrainingTrackId = tracks[1].TrainingTrackId,
+                EnrollmentDate = new DateTime(2026, 7, 6, 12, 0, 0, DateTimeKind.Utc),
+                Status = EnrollmentStatus.Active,
+                ProgressPercentage = 40.00m
+            },
+            new Enrollment
+            {
+                StudentId = students[3].StudentId,
+                TrainingTrackId = tracks[1].TrainingTrackId,
+                EnrollmentDate = new DateTime(2026, 7, 7, 14, 0, 0, DateTimeKind.Utc),
+                Status = EnrollmentStatus.Active,
+                ProgressPercentage = 35.00m
+            },
+            new Enrollment
+            {
+                StudentId = students[6].StudentId,
+                TrainingTrackId = tracks[3].TrainingTrackId,
+                EnrollmentDate = new DateTime(2026, 6, 1, 9, 0, 0, DateTimeKind.Utc),
+                Status = EnrollmentStatus.Completed,
+                ProgressPercentage = 100.00m,
+                FinalResult = "Passed with Honors (96%)",
+                Notes = "Completed prior batch."
+            },
+            new Enrollment
+            {
+                StudentId = students[5].StudentId,
+                TrainingTrackId = tracks[0].TrainingTrackId,
+                EnrollmentDate = new DateTime(2026, 7, 1, 8, 0, 0, DateTimeKind.Utc),
+                Status = EnrollmentStatus.Cancelled,
+                ProgressPercentage = 0.00m,
+                Notes = "Withdrew before track started."
+            }
+        };
+        await context.Enrollments.AddRangeAsync(enrollments);
+        await context.SaveChangesAsync();
+
+        // 5. Seed Payments
+        var payments = new List<Payment>
+        {
+            new Payment
+            {
+                EnrollmentId = enrollments[0].EnrollmentId,
+                Amount = 8500.00m,
+                PaymentMethod = PaymentMethod.CreditCard,
+                PaymentDate = new DateTime(2026, 7, 2, 9, 15, 0, DateTimeKind.Utc),
+                PaymentStatus = PaymentStatus.Completed,
+                ReferenceNumber = "PAY-2026-07-001",
+                Notes = "Full tuition payment via Visa."
+            },
+            new Payment
+            {
+                EnrollmentId = enrollments[1].EnrollmentId,
+                Amount = 5000.00m,
+                PaymentMethod = PaymentMethod.VodafoneCash,
+                PaymentDate = new DateTime(2026, 7, 3, 11, 0, 0, DateTimeKind.Utc),
+                PaymentStatus = PaymentStatus.Completed,
+                ReferenceNumber = "PAY-2026-07-002",
+                Notes = "First installment paid via Vodafone Cash."
+            },
+            new Payment
+            {
+                EnrollmentId = enrollments[2].EnrollmentId,
+                Amount = 5000.00m,
+                PaymentMethod = PaymentMethod.Fawry,
+                PaymentDate = new DateTime(2026, 7, 6, 12, 30, 0, DateTimeKind.Utc),
+                PaymentStatus = PaymentStatus.Completed,
+                ReferenceNumber = "PAY-2026-07-003",
+                Notes = "Fawry payment."
+            },
+            new Payment
+            {
+                EnrollmentId = enrollments[3].EnrollmentId,
+                Amount = 5000.00m,
+                PaymentMethod = PaymentMethod.BankTransfer,
+                PaymentDate = new DateTime(2026, 7, 7, 14, 30, 0, DateTimeKind.Utc),
+                PaymentStatus = PaymentStatus.Completed,
+                ReferenceNumber = "PAY-2026-07-004",
+                Notes = "Bank transfer."
+            },
+            new Payment
+            {
+                EnrollmentId = enrollments[4].EnrollmentId,
+                Amount = 10500.00m,
+                PaymentMethod = PaymentMethod.CreditCard,
+                PaymentDate = new DateTime(2026, 6, 1, 9, 30, 0, DateTimeKind.Utc),
+                PaymentStatus = PaymentStatus.Completed,
+                ReferenceNumber = "PAY-2026-06-001",
+                Notes = "Completed payment for completed track."
+            }
+        };
+        await context.Payments.AddRangeAsync(payments);
+        await context.SaveChangesAsync();
+
+        // 6. Seed Track Sessions
+        var sessions = new List<TrackSession>
+        {
+            new TrackSession
+            {
+                TrainingTrackId = tracks[0].TrainingTrackId,
+                CreatedByInstructorId = instructors[0].InstructorId,
+                Title = "Session 01: ASP.NET Core & Dependency Injection",
+                Description = "Deep dive into ASP.NET Core runtime, request pipeline, and DI container lifetimes.",
+                MeetingLink = "https://meet.google.com/abc-defg-hij",
+                SessionDate = new DateTime(2026, 7, 5, 18, 0, 0, DateTimeKind.Utc),
+                IsCompleted = true,
+                Notes = "Covered Singleton, Scoped, and Transient lifetimes."
+            },
+            new TrackSession
+            {
+                TrainingTrackId = tracks[0].TrainingTrackId,
+                CreatedByInstructorId = instructors[0].InstructorId,
+                Title = "Session 02: EF Core & Relational Modeling",
+                Description = "Fluent API, navigation properties, migrations, and query optimization.",
+                MeetingLink = "https://meet.google.com/abc-defg-hij",
+                SessionDate = new DateTime(2026, 7, 8, 18, 0, 0, DateTimeKind.Utc),
+                IsCompleted = true,
+                Notes = "Reviewed 1-to-many and many-to-many relationships."
+            },
+            new TrackSession
+            {
+                TrainingTrackId = tracks[0].TrainingTrackId,
+                CreatedByInstructorId = instructors[0].InstructorId,
+                Title = "Session 03: JWT Authentication & Security",
+                Description = "Token generation, claims, role-based access control, and password hashing.",
+                MeetingLink = "https://meet.google.com/abc-defg-hij",
+                SessionDate = new DateTime(2026, 7, 12, 18, 0, 0, DateTimeKind.Utc),
+                IsCompleted = false,
+                Notes = "Upcoming session on identity architectures."
+            }
+        };
+        await context.TrackSessions.AddRangeAsync(sessions);
+        await context.SaveChangesAsync();
+
+        // 6. Seed Baseline Activity Logs if empty
+        if (!await context.ActivityLogs.AnyAsync())
+        {
+            var admin = await context.Users.FirstOrDefaultAsync(u => u.Email == "admin@techmaster.com");
+            var student = await context.Users.FirstOrDefaultAsync(u => u.Email == "student@techmaster.com");
+            var firstTrack = await context.TrainingTracks.FirstOrDefaultAsync();
+            var firstEnrollment = await context.Enrollments.FirstOrDefaultAsync();
+            var firstPayment = await context.Payments.FirstOrDefaultAsync();
+
+            var seedLogs = new List<ActivityLog>
+            {
+                new ActivityLog
+                {
+                    UserId = admin?.Id,
+                    UserRole = "Admin",
+                    UserEmail = "admin@techmaster.com",
+                    Action = "UserRegistered",
+                    EntityName = "ApplicationUser",
+                    EntityId = admin?.Id.ToString(),
+                    Description = "System Administrator account provisioned and initialized.",
+                    CreatedAt = DateTime.UtcNow.AddDays(-30),
+                    IpAddress = "127.0.0.1",
+                    CorrelationId = Guid.NewGuid().ToString("D"),
+                    Metadata = "{\"role\":\"Admin\",\"systemInit\":true}"
+                },
+                new ActivityLog
+                {
+                    UserId = admin?.Id,
+                    UserRole = "Admin",
+                    UserEmail = "admin@techmaster.com",
+                    Action = "TrackCreated",
+                    EntityName = "TrainingTrack",
+                    EntityId = firstTrack?.TrainingTrackId.ToString() ?? "1",
+                    Description = $"Training track '{firstTrack?.Title ?? "ASP.NET Core Enterprise"}' created with capacity {firstTrack?.Capacity ?? 25}.",
+                    CreatedAt = DateTime.UtcNow.AddDays(-28),
+                    IpAddress = "127.0.0.1",
+                    CorrelationId = Guid.NewGuid().ToString("D"),
+                    Metadata = "{\"code\":\"" + (firstTrack?.Code ?? "NET-01") + "\",\"capacity\":" + (firstTrack?.Capacity ?? 25) + "}"
+                },
+                new ActivityLog
+                {
+                    UserId = student?.Id,
+                    UserRole = "Student",
+                    UserEmail = "student@techmaster.com",
+                    Action = "UserRegistered",
+                    EntityName = "ApplicationUser",
+                    EntityId = student?.Id.ToString(),
+                    Description = "Student 'student@techmaster.com' registered successfully.",
+                    CreatedAt = DateTime.UtcNow.AddDays(-25),
+                    IpAddress = "192.168.1.15",
+                    CorrelationId = Guid.NewGuid().ToString("D"),
+                    Metadata = "{\"role\":\"Student\",\"specialization\":null}"
+                },
+                new ActivityLog
+                {
+                    UserId = student?.Id,
+                    UserRole = "Student",
+                    UserEmail = "student@techmaster.com",
+                    Action = "EnrollmentRequested",
+                    EntityName = "Enrollment",
+                    EntityId = firstEnrollment?.EnrollmentId.ToString() ?? "1",
+                    Description = $"Enrollment #{firstEnrollment?.EnrollmentId ?? 1} requested for Student Nada Ashraf in Track #{firstTrack?.TrainingTrackId ?? 1}.",
+                    CreatedAt = DateTime.UtcNow.AddDays(-20),
+                    IpAddress = "192.168.1.15",
+                    CorrelationId = Guid.NewGuid().ToString("D"),
+                    Metadata = "{\"initialStatus\":\"Pending\",\"studentId\":" + (student?.StudentId ?? 1) + "}"
+                },
+                new ActivityLog
+                {
+                    UserId = admin?.Id,
+                    UserRole = "Admin",
+                    UserEmail = "admin@techmaster.com",
+                    Action = "EnrollmentStatusUpdated",
+                    EntityName = "Enrollment",
+                    EntityId = firstEnrollment?.EnrollmentId.ToString() ?? "1",
+                    Description = $"Enrollment #{firstEnrollment?.EnrollmentId ?? 1} status updated from Pending to Active.",
+                    CreatedAt = DateTime.UtcNow.AddDays(-19),
+                    IpAddress = "127.0.0.1",
+                    CorrelationId = Guid.NewGuid().ToString("D"),
+                    Metadata = "{\"previousStatus\":\"Pending\",\"newStatus\":\"Active\"}"
+                },
+                new ActivityLog
+                {
+                    UserId = student?.Id,
+                    UserRole = "Student",
+                    UserEmail = "student@techmaster.com",
+                    Action = "PaymentCreated",
+                    EntityName = "Payment",
+                    EntityId = firstPayment?.PaymentId.ToString() ?? "1",
+                    Description = $"Payment #{firstPayment?.PaymentId ?? 1} of 7,500.00 EGP recorded for Enrollment #{firstEnrollment?.EnrollmentId ?? 1}.",
+                    CreatedAt = DateTime.UtcNow.AddDays(-19),
+                    IpAddress = "192.168.1.15",
+                    CorrelationId = Guid.NewGuid().ToString("D"),
+                    Metadata = "{\"amount\":7500.00,\"paymentMethod\":\"CreditCard\",\"paymentStatus\":\"Completed\"}"
+                }
+            };
+
+            await context.ActivityLogs.AddRangeAsync(seedLogs);
+            await context.SaveChangesAsync();
+        }
+    }
+}
