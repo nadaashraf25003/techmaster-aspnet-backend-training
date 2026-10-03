@@ -81,9 +81,9 @@ techmaster-aspnet-backend-training/
 | **04** | [Professional Architecture Refactor](task-04-professional-architecture-refactor/) | ✅ **Done** | Clean layered architecture, Result pattern, unified response envelope, middleware. |
 | **05** | [Validation, Errors & Logging](task-05-validation-errors-logging/) | ✅ **Done** | 24 Rule Bank, Global Exception Middleware, Safe Error Masking, Structured Audit Logs. |
 | **06** | [Production Redeployment](task-06-production-redeployment/) | ✅ **Done** | Cloud SQL Server, MonsterASP hosting, JWT live verification, healthchecks. |
-| **07** | [Audit Trail & Activity Timeline](task-07-audit-activity-timeline/) | ⏳ *Next* | State change tracking, UTC audit interceptors, timeline query endpoint. |
-| **08** | [Bad Auth Refactor Pack](task-08-bad-auth-refactor-pack/) | ⏳ *Queued* | Security auditing, fixing 5 critical legacy authentication flaws. |
-| **09** | [LinkedIn Showcase & Demo Video](task-09-demo-linkedin-showcase/) | ⏳ *Queued* | Postman runner evidence, video recording, portfolio article. |
+| **07** | [Audit Trail & Activity Timeline](task-07-audit-activity-timeline/) | ✅ **Done** | Immutable activity logs, admin query filters, summary metrics, entity timelines. |
+| **08** | [Bad Auth Refactor Pack](task-08-bad-auth-refactor-pack/) | ✅ **Done** | Security code review, remediation of 10 auth flaws, PBKDF2, signed JWT, audit logs. |
+| **09** | [LinkedIn Showcase & Demo Video](task-09-demo-linkedin-showcase/) | ⏳ *Next* | Postman runner evidence, video recording, portfolio article. |
 
 ---
 

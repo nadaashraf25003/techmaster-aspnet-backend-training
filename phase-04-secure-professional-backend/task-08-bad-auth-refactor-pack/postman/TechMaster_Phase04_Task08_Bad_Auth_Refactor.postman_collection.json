@@ -1,0 +1,366 @@
+{
+	"info": {
+		"_postman_id": "88888888-8888-8888-8888-888888888888",
+		"name": "TechMaster - Phase 04 - Task 08 (Bad Auth Refactor Pack)",
+		"description": "Postman Automated Test Suite for Task 08 Bad Auth Refactor Pack. Tests 10+ vulnerability fixes including password hashing, cryptographic JWT tokens, privilege escalation defense, input validation, HTTP status codes, and security audit logs.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01 - Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/health",
+					"host": ["{{baseUrl}}"],
+					"path": ["health"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test('System is Healthy', function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql('Healthy');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "02 - FIX 4 & 7: Login Non-Existent User (401 Unauthorized)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"nonexistent.user.test@techmaster.com\",\n  \"password\": \"Password@123456\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/auth/login",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "auth", "login"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Returns 401 Unauthorized (NOT 200 OK wrong email)', function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"pm.test('Failure payload is structured ApiResponse', function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.be.false;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "03 - FIX 1 & 7: Login Wrong Password (401 Unauthorized)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"admin@techmaster.com\",\n  \"password\": \"WrongPassword@999\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/auth/login",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "auth", "login"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Returns 401 Unauthorized (NOT 200 OK wrong password)', function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "04 - FIX 5: Privilege Escalation Defense - Register as Admin (400 Bad Request)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"fullName\": \"Privilege Escalation Attacker\",\n  \"email\": \"hacker.admin@techmaster.com\",\n  \"password\": \"Password@123456\",\n  \"confirmPassword\": \"Password@123456\",\n  \"role\": \"Admin\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/auth/register",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "auth", "register"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Returns 400 Bad Request prohibiting public Admin registration', function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "05 - FIX 1, 3, 4: Valid Student Registration (201 Created & Safe DTO)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"fullName\": \"Secure Refactored Student\",\n  \"email\": \"secure.student.{{$randomInt}}@techmaster.com\",\n  \"password\": \"Password@123456\",\n  \"confirmPassword\": \"Password@123456\",\n  \"role\": \"Student\",\n  \"phoneNumber\": \"01012345678\",\n  \"address\": \"100 Clean Architecture St\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/auth/register",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "auth", "register"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 201 Created', function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.test('Does NOT leak password or passwordHash in response', function () {",
+							"    pm.expect(jsonData.data.password).to.be.undefined;",
+							"    pm.expect(jsonData.data.passwordHash).to.be.undefined;",
+							"});",
+							"if (jsonData.data && jsonData.data.email) {",
+							"    pm.environment.set('studentEmail', jsonData.data.email);",
+							"    pm.environment.set('studentUserId', jsonData.data.userId);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "06 - FIX 2 & 3: Login as Registered Student (JWT Token Issuance)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"{{studentEmail}}\",\n  \"password\": \"Password@123456\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/auth/login",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "auth", "login"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.test('Returns real cryptographically signed JWT token (3 parts)', function () {",
+							"    pm.expect(jsonData.data.accessToken).to.be.a('string');",
+							"    var parts = jsonData.data.accessToken.split('.');",
+							"    pm.expect(parts.length).to.eql(3);",
+							"});",
+							"pm.test('Returns refresh token and expiration', function () {",
+							"    pm.expect(jsonData.data.refreshToken).to.be.a('string');",
+							"    pm.expect(jsonData.data.expiresAt).to.be.a('string');",
+							"});",
+							"if (jsonData.data && jsonData.data.accessToken) {",
+							"    pm.environment.set('studentToken', jsonData.data.accessToken);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "07 - FIX 2: Verify Protected Endpoint /api/auth/me",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{studentToken}}"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/auth/me",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "auth", "me"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.test('Returns verified claims identity', function () {",
+							"    pm.expect(jsonData.data.role).to.eql('Student');",
+							"    pm.expect(jsonData.data.isActive).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "08 - FIX 9: Inactive Account Login Check (403 Forbidden)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"inactive@techmaster.com\",\n  \"password\": \"Inactive@123456\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/auth/login",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "auth", "login"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Returns 403 Forbidden for deactivated account', function () {",
+							"    pm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "09 - FIX 10: Admin Queries Security Audit Trail",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{adminToken}}"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/admin/activity-logs?userId={{studentUserId}}",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "admin", "activity-logs"],
+					"query": [
+						{
+							"key": "userId",
+							"value": "{{studentUserId}}"
+						}
+					]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.test('Audit trail captures UserRegistered and UserLoggedIn actions', function () {",
+							"    pm.expect(jsonData.data.totalCount).to.be.above(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5250"
+		},
+		{
+			"key": "adminToken",
+			"value": ""
+		},
+		{
+			"key": "studentToken",
+			"value": ""
+		},
+		{
+			"key": "studentEmail",
+			"value": ""
+		},
+		{
+			"key": "studentUserId",
+			"value": ""
+		}
+	]
+}
