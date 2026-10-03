@@ -61,8 +61,8 @@ techmaster-aspnet-backend-training/
     ├── task-02-role-stories-access-control/       <-- ✅ Task 02: Role Stories & Access Control
     ├── task-03-secure-platform-upgrade/           <-- ✅ Task 03: Secure Platform Upgrade
     ├── task-04-professional-architecture-refactor/<-- ✅ Task 04: Architecture & Result Pattern
-    ├── task-05-validation-errors-logging/         <-- ⏳ Task 05: Validation, Middleware & Logs
-    ├── task-06-production-redeployment/           <-- ⏳ Task 06: Production Redeployment
+    ├── task-05-validation-errors-logging/         <-- ✅ Task 05: Validation, Middleware & Logs
+    ├── task-06-production-redeployment/           <-- ✅ Task 06: Production Redeployment
     ├── task-07-audit-activity-timeline/           <-- ⏳ Task 07: Audit Trail & Timeline
     ├── task-08-bad-auth-refactor-pack/            <-- ⏳ Task 08: Vulnerable Code Refactor Pack
     └── task-09-demo-linkedin-showcase/            <-- ⏳ Task 09: Video Demo & LinkedIn Showcase
@@ -80,8 +80,8 @@ techmaster-aspnet-backend-training/
 | **03** | [Secure Platform Upgrade](task-03-secure-platform-upgrade/) | ✅ **Done** | Track sessions, instructor progress reports, student self-service enrollment. |
 | **04** | [Professional Architecture Refactor](task-04-professional-architecture-refactor/) | ✅ **Done** | Clean layered architecture, Result pattern, unified response envelope, middleware. |
 | **05** | [Validation, Errors & Logging](task-05-validation-errors-logging/) | ✅ **Done** | 24 Rule Bank, Global Exception Middleware, Safe Error Masking, Structured Audit Logs. |
-| **06** | [Production Redeployment](task-06-production-redeployment/) | ⏳ *Next* | Cloud SQL Server, Render / MonsterASP hosting, healthchecks. |
-| **07** | [Audit Trail & Activity Timeline](task-07-audit-activity-timeline/) | ⏳ *Queued* | State change tracking, UTC audit interceptors, timeline query endpoint. |
+| **06** | [Production Redeployment](task-06-production-redeployment/) | ✅ **Done** | Cloud SQL Server, MonsterASP hosting, JWT live verification, healthchecks. |
+| **07** | [Audit Trail & Activity Timeline](task-07-audit-activity-timeline/) | ⏳ *Next* | State change tracking, UTC audit interceptors, timeline query endpoint. |
 | **08** | [Bad Auth Refactor Pack](task-08-bad-auth-refactor-pack/) | ⏳ *Queued* | Security auditing, fixing 5 critical legacy authentication flaws. |
 | **09** | [LinkedIn Showcase & Demo Video](task-09-demo-linkedin-showcase/) | ⏳ *Queued* | Postman runner evidence, video recording, portfolio article. |
 
